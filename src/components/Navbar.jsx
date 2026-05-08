@@ -1,7 +1,7 @@
 import React from 'react';
 import { LayoutDashboard, Bell, User, LogOut, Settings } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { Button } from '@/components/ui/button';
+import { Button } from "./ui/button" // (Assuming Navbar is in src/components)
 import {
   DropdownMenu,
   DropdownMenuContent,
