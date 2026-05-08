@@ -22,15 +22,16 @@ const Navbar = ({ session }) => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/70 dark:bg-zinc-950/70 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 transition-all">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/60 backdrop-blur-xl border-b border-zinc-800/50 transition-all" style={{height: 80}}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-full">
           {/* Left Side: Logo */}
           <div className="flex-shrink-0 flex items-center">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="flex gap-2 items-center">
-                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                <span className="font-mono text-xl font-black tracking-widest text-zinc-900 dark:text-zinc-50">
+            <Link to="/" className="flex items-center gap-3">
+              {/* System status indicator */}
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 bg-red-600 rounded-full animate-pulse border border-zinc-900" aria-hidden="true" />
+                <span className="font-mono text-2xl font-extrabold tracking-widest uppercase text-zinc-50">
                   WASTE.MAP
                 </span>
               </div>
@@ -42,22 +43,22 @@ const Navbar = ({ session }) => {
             {session ? (
               <>
                 <Link to="/dashboard">
-                  <Button variant="ghost" size="icon" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50">
+                  <Button variant="ghost" size="icon" className="text-zinc-200 hover:text-zinc-50">
                     <LayoutDashboard className="h-5 w-5" />
                   </Button>
                 </Link>
                 
                 <Button variant="ghost" size="icon" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 relative">
                   <Bell className="h-5 w-5" />
-                  <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-zinc-950"></span>
+                  <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-zinc-900"></span>
                 </Button>
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-9 w-9 rounded-full ml-2 border border-zinc-200 dark:border-zinc-800">
+                    <Button variant="ghost" className="relative h-9 w-9 ml-2 border border-zinc-800">
                       <Avatar className="h-9 w-9">
                         <AvatarImage src="" alt="User avatar" />
-                        <AvatarFallback className="bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100">
+                        <AvatarFallback className="bg-zinc-800 text-zinc-50">
                           <User className="h-4 w-4" />
                         </AvatarFallback>
                       </Avatar>
@@ -66,8 +67,8 @@ const Navbar = ({ session }) => {
                   <DropdownMenuContent className="w-56" align="end" forceMount>
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">Account</p>
-                        <p className="text-xs leading-none text-muted-foreground">
+                        <p className="text-sm font-medium leading-none uppercase tracking-widest">ACCOUNT</p>
+                        <p className="text-xs leading-none text-zinc-400 uppercase tracking-widest">
                           {session?.user?.email || 'user@example.com'}
                         </p>
                       </div>
@@ -86,8 +87,8 @@ const Navbar = ({ session }) => {
               </>
             ) : (
               <Link to="/login">
-                <Button variant="ghost" className="font-medium hover:bg-zinc-100 dark:hover:bg-zinc-800">
-                  Sign In
+                <Button variant="ghost" className="font-medium hover:bg-zinc-800/50 uppercase tracking-widest">
+                  SIGN IN
                 </Button>
               </Link>
             )}
