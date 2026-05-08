@@ -1,0 +1,2613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoVision — Smart Campus Intelligence System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#03070f;
+  --bg2:#060e1e;
+  --bg3:#0a1628;
+  --surface:#0d1f3c;
+  --surface2:#112546;
+  --cyan:#00d4ff;
+  --cyan-dim:#0099bb;
+  --blue:#1a6bff;
+  --blue-dim:#0e4db3;
+  --green:#00ff88;
+  --green-dim:#00b360;
+  --yellow:#ffd700;
+  --orange:#ff8c00;
+  --red:#ff3355;
+  --red-dim:#cc1f3d;
+  --text:#e8eeff;
+  --text2:#8fa0c0;
+  --text3:#4a5a7a;
+  --border:rgba(0,212,255,0.12);
+  --border2:rgba(0,212,255,0.25);
+  --glow-cyan:0 0 30px rgba(0,212,255,0.3);
+  --glow-blue:0 0 30px rgba(26,107,255,0.3);
+  --glow-red:0 0 30px rgba(255,51,85,0.4);
+  --font-head:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --r:12px;
+  --r2:20px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);overflow-x:hidden;min-height:100vh}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--cyan-dim);border-radius:4px}
+
+/* ─── NAV ─── */
+#nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 2rem;height:60px;display:flex;align-items:center;justify-content:space-between;background:rgba(3,7,15,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:all 0.3s}
+.nav-logo{display:flex;align-items:center;gap:10px;font-family:var(--font-head);font-size:1.25rem;font-weight:700;color:var(--text);text-decoration:none}
+.nav-logo-dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan);animation:pulse 2s ease-in-out infinite}
+.nav-links{display:flex;align-items:center;gap:0.25rem}
+.nav-link{padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:500;color:var(--text2);transition:all 0.2s;letter-spacing:0.03em;text-transform:uppercase;border:none;background:none}
+.nav-link:hover,.nav-link.active{color:var(--cyan);background:rgba(0,212,255,0.08)}
+.nav-badge{display:flex;align-items:center;gap:6px;font-size:0.7rem;font-family:var(--font-mono);color:var(--green);background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);padding:4px 10px;border-radius:20px}
+.nav-badge-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 1.5s ease-in-out infinite}
+
+/* ─── PAGES ─── */
+.page{display:none;min-height:100vh;padding-top:60px}
+.page.active{display:block}
+
+/* ─── HERO ─── */
+#hero-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.04) 1px,transparent 1px);background-size:50px 50px;animation:gridMove 20s linear infinite}
+.hero-orb1{position:absolute;top:-20%;left:-10%;width:60%;height:60%;background:radial-gradient(circle,rgba(0,212,255,0.12) 0%,transparent 60%);animation:float1 8s ease-in-out infinite}
+.hero-orb2{position:absolute;bottom:-20%;right:-10%;width:50%;height:60%;background:radial-gradient(circle,rgba(26,107,255,0.1) 0%,transparent 60%);animation:float2 10s ease-in-out infinite}
+.hero-orb3{position:absolute;top:30%;left:30%;width:40%;height:40%;background:radial-gradient(circle,rgba(0,255,136,0.05) 0%,transparent 60%);animation:float1 12s ease-in-out infinite reverse}
+
+/* ─── SECTIONS ─── */
+.section{padding:5rem 2rem;max-width:1200px;margin:0 auto}
+.section-full{padding:5rem 2rem;width:100%}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:0.7rem;font-family:var(--font-mono);color:var(--cyan);background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);padding:5px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1.5rem}
+.tag-dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);animation:pulse 2s ease-in-out infinite}
+h1.hero-title{font-family:var(--font-head);font-size:clamp(2.5rem,6vw,5.5rem);font-weight:800;line-height:1.05;letter-spacing:-0.03em;margin-bottom:1.5rem}
+.gradient-text{background:linear-gradient(135deg,#fff 0%,var(--cyan) 50%,var(--blue) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:1.1rem;color:var(--text2);max-width:550px;line-height:1.7;margin-bottom:2.5rem}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--cyan);color:var(--bg);padding:0.875rem 2rem;border-radius:10px;font-weight:600;font-size:0.9rem;cursor:pointer;transition:all 0.25s;border:none;font-family:var(--font-body)}
+.btn-primary:hover{background:#fff;box-shadow:0 0 40px rgba(0,212,255,0.5);transform:translateY(-1px)}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--text);padding:0.875rem 2rem;border-radius:10px;font-weight:500;font-size:0.9rem;cursor:pointer;transition:all 0.25s;border:1px solid var(--border2);font-family:var(--font-body)}
+.btn-ghost:hover{background:rgba(0,212,255,0.06);border-color:var(--cyan);color:var(--cyan)}
+.btn-group{display:flex;gap:1rem;flex-wrap:wrap}
+
+/* ─── GLASS CARD ─── */
+.glass-card{background:rgba(13,31,60,0.6);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--r2);padding:1.5rem;transition:all 0.3s}
+.glass-card:hover{border-color:var(--border2);box-shadow:var(--glow-cyan)}
+.glass-card.red:hover{border-color:rgba(255,51,85,0.3);box-shadow:var(--glow-red)}
+
+/* ─── STAT CHIPS ─── */
+.stat-chip{background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.15);border-radius:10px;padding:0.75rem 1rem;display:flex;flex-direction:column;gap:4px}
+.stat-chip .val{font-family:var(--font-mono);font-size:1.5rem;font-weight:500;color:var(--cyan)}
+.stat-chip .lbl{font-size:0.72rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em}
+
+/* ─── MAP PREVIEW ─── */
+#hero-map{position:relative;border-radius:var(--r2);overflow:hidden;border:1px solid var(--border2);box-shadow:0 0 60px rgba(0,212,255,0.2);background:var(--bg2)}
+#campus-map-img{width:100%;display:block;opacity:0.85;filter:brightness(0.9) saturate(1.1)}
+.map-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(3,7,15,0.8) 100%)}
+.map-dot{position:absolute;width:10px;height:10px;border-radius:50%;animation:mapPulse 2s ease-in-out infinite}
+.map-dot::after{content:'';position:absolute;inset:-5px;border-radius:50%;background:inherit;opacity:0.3;animation:mapPulse 2s ease-in-out infinite 0.5s}
+.map-label{position:absolute;font-size:0.65rem;font-family:var(--font-mono);background:rgba(3,7,15,0.85);border:1px solid var(--border2);padding:3px 8px;border-radius:6px;white-space:nowrap;pointer-events:none}
+.float-stat{position:absolute;background:rgba(6,14,30,0.92);backdrop-filter:blur(12px);border:1px solid var(--border2);border-radius:10px;padding:8px 12px;font-size:0.72rem;animation:floatAnim 4s ease-in-out infinite}
+
+/* ─── FEATURES GRID ─── */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.feature-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:1.75rem;transition:all 0.3s;cursor:pointer}
+.feature-card:hover{border-color:var(--border2);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.feature-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1rem}
+.feature-icon.cyan{background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2)}
+.feature-icon.blue{background:rgba(26,107,255,0.1);border:1px solid rgba(26,107,255,0.2)}
+.feature-icon.green{background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.2)}
+.feature-icon.orange{background:rgba(255,140,0,0.1);border:1px solid rgba(255,140,0,0.2)}
+.feature-card h3{font-family:var(--font-head);font-size:1.1rem;font-weight:700;margin-bottom:0.5rem}
+.feature-card p{font-size:0.875rem;color:var(--text2);line-height:1.65}
+
+/* ─── LIVE MAP PAGE ─── */
+#live-map-container{display:flex;height:calc(100vh - 60px);gap:0}
+#map-sidebar{width:300px;min-width:300px;background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.75rem}
+#map-main{flex:1;position:relative;overflow:hidden}
+#map-img-container{width:100%;height:100%;position:relative;overflow:hidden;cursor:crosshair}
+#map-img-container img{width:100%;height:100%;object-fit:cover;filter:brightness(0.95) saturate(1.1)}
+.map-controls{position:absolute;bottom:1.5rem;right:1.5rem;display:flex;flex-direction:column;gap:0.5rem;z-index:10}
+.map-ctrl-btn{width:40px;height:40px;background:rgba(6,14,30,0.92);backdrop-filter:blur(12px);border:1px solid var(--border2);border-radius:10px;color:var(--cyan);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-family:var(--font-body)}
+.map-ctrl-btn:hover{background:var(--cyan);color:var(--bg)}
+.map-ai-alert{position:absolute;top:1rem;right:1rem;max-width:280px;z-index:10;background:rgba(6,14,30,0.92);backdrop-filter:blur(16px);border:1px solid rgba(255,51,85,0.3);border-radius:14px;padding:1rem;animation:slideIn 0.5s ease}
+.map-overlay-info{position:absolute;bottom:1.5rem;left:1.5rem;max-width:280px;z-index:10;background:rgba(6,14,30,0.88);backdrop-filter:blur(16px);border:1px solid var(--border2);border-radius:14px;padding:1rem}
+.building-popup{display:none;position:absolute;background:rgba(6,14,30,0.96);backdrop-filter:blur(20px);border:1px solid var(--border2);border-radius:16px;padding:1.25rem;z-index:20;width:240px;animation:popIn 0.2s ease}
+.building-popup.visible{display:block}
+.risk-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:6px;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em}
+.risk-overflow{background:rgba(255,51,85,0.15);color:var(--red);border:1px solid rgba(255,51,85,0.3)}
+.risk-high{background:rgba(255,140,0,0.15);color:var(--orange);border:1px solid rgba(255,140,0,0.3)}
+.risk-moderate{background:rgba(255,215,0,0.15);color:var(--yellow);border:1px solid rgba(255,215,0,0.3)}
+.risk-low{background:rgba(0,255,136,0.15);color:var(--green);border:1px solid rgba(0,255,136,0.3)}
+
+/* ─── SIDEBAR ELEMENTS ─── */
+.sidebar-title{font-family:var(--font-head);font-size:0.75rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;padding:0.25rem 0;margin-top:0.5rem}
+.building-item{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:0.75rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:space-between}
+.building-item:hover{border-color:var(--border2)}
+.building-item.selected{border-color:var(--cyan);background:rgba(0,212,255,0.05)}
+.occ-bar{height:4px;border-radius:2px;background:var(--bg);overflow:hidden;margin-top:6px}
+.occ-fill{height:100%;border-radius:2px;transition:width 1s ease}
+
+/* ─── ANALYTICS PAGE ─── */
+.analytics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+@media(max-width:900px){.analytics-grid{grid-template-columns:repeat(2,1fr)}}
+.a-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;transition:all 0.3s}
+.a-card:hover{border-color:var(--border2)}
+.a-card .title{font-size:0.75rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem}
+.a-card .value{font-family:var(--font-mono);font-size:2rem;font-weight:500;color:var(--cyan)}
+.a-card .sub{font-size:0.8rem;color:var(--green);margin-top:4px}
+.chart-area{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:1.5rem}
+.chart-title{font-family:var(--font-head);font-size:0.9rem;font-weight:700;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between}
+.charts-row{display:grid;grid-template-columns:2fr 1fr;gap:1rem;margin-bottom:1rem}
+@media(max-width:800px){.charts-row{grid-template-columns:1fr}}
+
+/* ─── ALERT PAGE ─── */
+.alert-grid{display:grid;gap:1rem}
+.alert-card{background:var(--bg2);border-radius:var(--r2);padding:1.25rem;display:flex;gap:1rem;align-items:flex-start;transition:all 0.3s;border-left:3px solid transparent}
+.alert-card.critical{border-color:var(--red);background:rgba(255,51,85,0.05)}
+.alert-card.high{border-color:var(--orange);background:rgba(255,140,0,0.05)}
+.alert-card.moderate{border-color:var(--yellow);background:rgba(255,215,0,0.05)}
+.alert-card.resolved{border-color:var(--green);background:rgba(0,255,136,0.05);opacity:0.6}
+.alert-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.alert-icon.critical{background:rgba(255,51,85,0.15)}
+.alert-icon.high{background:rgba(255,140,0,0.15)}
+.alert-icon.moderate{background:rgba(255,215,0,0.15)}
+.alert-icon.resolved{background:rgba(0,255,136,0.15)}
+.pulse-ring{animation:alertPulse 1.5s ease-in-out infinite}
+
+/* ─── AI PAGE ─── */
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.ai-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:1.5rem;position:relative;overflow:hidden}
+.ai-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.ai-metric{font-family:var(--font-mono);font-size:3rem;font-weight:500;background:linear-gradient(135deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ─── ADMIN PAGE ─── */
+.admin-layout{display:grid;grid-template-columns:220px 1fr;gap:1rem;min-height:calc(100vh - 120px)}
+@media(max-width:768px){.admin-layout{grid-template-columns:1fr}}
+.admin-nav{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:1rem;height:fit-content}
+.admin-nav-item{padding:0.625rem 0.875rem;border-radius:8px;cursor:pointer;font-size:0.85rem;color:var(--text2);transition:all 0.2s;display:flex;align-items:center;gap:8px;margin-bottom:2px}
+.admin-nav-item:hover,.admin-nav-item.active{background:rgba(0,212,255,0.08);color:var(--cyan)}
+.admin-content{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:1.5rem}
+.form-group{margin-bottom:1rem}
+.form-label{font-size:0.78rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem;display:block}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:0.625rem 0.875rem;color:var(--text);font-family:var(--font-body);font-size:0.875rem;outline:none;transition:all 0.2s}
+.form-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.1)}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238fa0c0' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.toggle-switch{position:relative;display:inline-block;width:44px;height:24px}
+.toggle-switch input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--bg3);border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:all 0.3s}
+.toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:2px;bottom:2px;background:var(--text2);border-radius:50%;transition:all 0.3s}
+.toggle-switch input:checked + .toggle-slider{background:rgba(0,212,255,0.15);border-color:var(--cyan)}
+.toggle-switch input:checked + .toggle-slider::before{transform:translateX(20px);background:var(--cyan)}
+.admin-table{width:100%;border-collapse:collapse;font-size:0.85rem}
+.admin-table th{text-align:left;padding:0.625rem 0.875rem;font-size:0.72rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border)}
+.admin-table td{padding:0.75rem 0.875rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text2)}
+.admin-table tr:hover td{background:rgba(0,212,255,0.03)}
+
+/* ─── SECTION HEADERS ─── */
+.sec-header{margin-bottom:2.5rem}
+.sec-header h2{font-family:var(--font-head);font-size:clamp(1.5rem,3vw,2.5rem);font-weight:800;letter-spacing:-0.02em;margin-bottom:0.5rem}
+.sec-header p{color:var(--text2);font-size:0.95rem;max-width:600px}
+
+/* ─── DIVIDER ─── */
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:3rem 0}
+
+/* ─── STATUS INDICATOR ─── */
+.status-dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+.status-dot.green{background:var(--green);box-shadow:0 0 8px var(--green)}
+.status-dot.yellow{background:var(--yellow);box-shadow:0 0 8px var(--yellow)}
+.status-dot.red{background:var(--red);box-shadow:0 0 8px var(--red);animation:pulse 1s infinite}
+.status-dot.blue{background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+
+/* ─── MINI BAR CHART ─── */
+.bar-chart{display:flex;align-items:flex-end;gap:4px;height:60px}
+.bar{flex:1;background:var(--blue);border-radius:3px 3px 0 0;min-height:4px;transition:height 0.5s ease;position:relative}
+.bar:hover{background:var(--cyan)}
+
+/* ─── SPARKLINE ─── */
+.sparkline{height:40px;position:relative}
+.sparkline svg{width:100%;height:100%}
+
+/* ─── FOOTER ─── */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:2rem;text-align:center;color:var(--text3);font-size:0.8rem}
+footer span{color:var(--cyan)}
+
+/* ─── ANIMATIONS ─── */
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.6;transform:scale(0.95)}}
+@keyframes gridMove{0%{transform:translate(0,0)}100%{transform:translate(50px,50px)}}
+@keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-20px)}}
+@keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(-20px,30px)}}
+@keyframes mapPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:0.5}}
+@keyframes floatAnim{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes alertPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,51,85,0.4)}50%{box-shadow:0 0 0 8px rgba(255,51,85,0)}}
+@keyframes slideIn{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes popIn{from{transform:scale(0.9);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes scanLine{0%{top:-2px}100%{top:100%}}
+@keyframes dataFlow{0%{stroke-dashoffset:100}100%{stroke-dashoffset:0}}
+@keyframes rotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── HERO SECTION SPECIFIC ─── */
+#page-landing{position:relative}
+#page-landing .hero-section{position:relative;min-height:calc(100vh - 60px);display:flex;align-items:center;overflow:hidden}
+.hero-content{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:4rem 2rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+@media(max-width:900px){.hero-content{grid-template-columns:1fr;gap:2rem}}
+.hero-map-preview{position:relative;animation:fadeUp 1s ease 0.5s both}
+.hero-left{animation:fadeUp 1s ease 0.2s both}
+.scan-overlay{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:var(--r2)}
+.scan-line{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(0,212,255,0.5),transparent);animation:scanLine 4s linear infinite}
+
+/* ─── NOTIFICATION TOAST ─── */
+.toast-container{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:0.5rem}
+.toast{background:rgba(6,14,30,0.95);backdrop-filter:blur(20px);border:1px solid var(--border2);border-radius:12px;padding:0.875rem 1rem;font-size:0.8rem;max-width:300px;animation:slideIn 0.3s ease;display:flex;align-items:flex-start;gap:8px}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:768px){
+  #live-map-container{flex-direction:column;height:auto}
+  #map-sidebar{width:100%;min-width:unset;max-height:300px}
+  .hero-content{grid-template-columns:1fr}
+  .analytics-grid{grid-template-columns:repeat(2,1fr)}
+  .admin-layout{grid-template-columns:1fr}
+  .nav-links{display:none}
+}
+
+/* ─── PROGRESS RINGS ─── */
+.ring-container{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.ring-container svg{transform:rotate(-90deg)}
+.ring-text{position:absolute;font-family:var(--font-mono);font-size:0.9rem;font-weight:500}
+
+/* ─── TIME SERIES CHART ─── */
+.ts-chart{width:100%;height:120px;display:block}
+
+/* ─── TOGGLE TABS ─── */
+.tab-bar{display:flex;gap:0.25rem;background:var(--bg3);border-radius:10px;padding:4px;margin-bottom:1.5rem;width:fit-content}
+.tab-btn{padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:500;color:var(--text2);transition:all 0.2s;border:none;background:none;font-family:var(--font-body)}
+.tab-btn.active{background:var(--surface2);color:var(--cyan)}
+
+/* ─── FLASHING ELEMENTS ─── */
+.flash{animation:alertPulse 1.5s ease-in-out infinite}
+.blink{animation:pulse 0.8s ease-in-out infinite}
+
+/* ─── MISC ─── */
+.mono{font-family:var(--font-mono)}
+.cyan{color:var(--cyan)}
+.green{color:var(--green)}
+.red{color:var(--red)}
+.orange{color:var(--orange)}
+.yellow{color:var(--yellow)}
+.text2{color:var(--text2)}
+.text3{color:var(--text3)}
+.bold{font-weight:700}
+.heading{font-family:var(--font-head);font-weight:700}
+small{font-size:0.78rem;color:var(--text2)}
+hr{border:none;border-top:1px solid var(--border);margin:1rem 0}
+.flex{display:flex;align-items:center}
+.flex-between{display:flex;align-items:center;justify-content:space-between}
+.gap-sm{gap:0.5rem}
+.gap-md{gap:1rem}
+.gap-lg{gap:1.5rem}
+.mb-sm{margin-bottom:0.5rem}
+.mb-md{margin-bottom:1rem}
+.mb-lg{margin-bottom:1.5rem}
+.mt-md{margin-top:1rem}
+.w-full{width:100%}
+/* ===== WINNER-LEVEL POLISH ADDITIONS ===== */
+
+body {
+  background:
+    radial-gradient(circle at 20% 10%, rgba(0,212,255,0.12), transparent 28%),
+    radial-gradient(circle at 80% 20%, rgba(26,107,255,0.10), transparent 30%),
+    radial-gradient(circle at 50% 100%, rgba(0,255,136,0.06), transparent 28%),
+    var(--bg);
+}
+
+/* animated noise/glass depth */
+.page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(120deg, transparent, rgba(0,212,255,0.035), transparent);
+  animation: ambientSweep 8s linear infinite;
+  z-index: 0;
+}
+
+@keyframes ambientSweep {
+  0% { transform: translateX(-100%); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+/* premium navbar */
+#nav {
+  box-shadow: 0 12px 45px rgba(0,0,0,0.45);
+}
+
+.nav-link {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 0;
+  height: 2px;
+  background: var(--cyan);
+  transition: 0.3s;
+  transform: translateX(-50%);
+  box-shadow: 0 0 12px var(--cyan);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 45%;
+}
+
+/* cinematic hero map */
+#hero-map {
+  transform-style: preserve-3d;
+  animation: heroMapFloat 6s ease-in-out infinite;
+}
+
+@keyframes heroMapFloat {
+  0%,100% { transform: perspective(900px) rotateX(2deg) rotateY(-4deg) translateY(0); }
+  50% { transform: perspective(900px) rotateX(4deg) rotateY(-7deg) translateY(-14px); }
+}
+
+/* glowing AI scanning effect */
+#hero-map::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(0,212,255,0.18) 48%,
+    rgba(255,255,255,0.24) 50%,
+    rgba(0,212,255,0.18) 52%,
+    transparent 100%
+  );
+  transform: translateX(-120%);
+  animation: mapShine 5s ease-in-out infinite;
+  z-index: 5;
+  pointer-events: none;
+}
+
+@keyframes mapShine {
+  0%, 35% { transform: translateX(-120%); }
+  70%, 100% { transform: translateX(120%); }
+}
+
+/* premium cards */
+.glass-card,
+.feature-card,
+.a-card,
+.chart-area,
+.ai-card,
+.alert-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card::before,
+.feature-card::before,
+.a-card::before,
+.chart-area::before,
+.ai-card::before,
+.alert-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top left, rgba(0,212,255,0.12), transparent 35%);
+  opacity: 0;
+  transition: 0.35s;
+  pointer-events: none;
+}
+
+.glass-card:hover::before,
+.feature-card:hover::before,
+.a-card:hover::before,
+.chart-area:hover::before,
+.ai-card:hover::before,
+.alert-card:hover::before {
+  opacity: 1;
+}
+
+.feature-card:hover,
+.a-card:hover,
+.chart-area:hover,
+.ai-card:hover {
+  transform: translateY(-6px) scale(1.01);
+}
+
+/* live map premium feel */
+#map-main::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at center, transparent 40%, rgba(3,7,15,0.35) 100%),
+    linear-gradient(180deg, rgba(0,212,255,0.04), transparent 35%, rgba(0,212,255,0.04));
+}
+
+#liveCampusMap {
+  animation: mapBreath 5s ease-in-out infinite;
+}
+
+@keyframes mapBreath {
+  0%,100% { filter: brightness(0.95) saturate(1.12); }
+  50% { filter: brightness(1.05) saturate(1.25); }
+}
+
+/* sidebar refinement */
+#map-sidebar {
+  box-shadow: 20px 0 60px rgba(0,0,0,0.35);
+}
+
+.building-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.building-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.08), transparent);
+  transform: translateX(-100%);
+  transition: 0.45s;
+}
+
+.building-item:hover::after {
+  transform: translateX(100%);
+}
+
+/* alert glow */
+.map-ai-alert {
+  box-shadow:
+    0 0 30px rgba(255,51,85,0.25),
+    inset 0 0 20px rgba(255,51,85,0.06);
+}
+
+/* animated buttons */
+.btn-primary,
+.btn-ghost,
+.nav-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before,
+.btn-ghost::before,
+.nav-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -80%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+  transform: skewX(-20deg);
+  transition: 0.5s;
+}
+
+.btn-primary:hover::before,
+.btn-ghost:hover::before,
+.nav-btn:hover::before {
+  left: 130%;
+}
+
+/* page reveal */
+.page.active {
+  animation: pageReveal 0.45s ease;
+}
+
+@keyframes pageReveal {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* floating animation for stat chips */
+.stat-chip {
+  animation: softFloat 5s ease-in-out infinite;
+}
+
+.stat-chip:nth-child(2) {
+  animation-delay: 0.8s;
+}
+
+.stat-chip:nth-child(3) {
+  animation-delay: 1.4s;
+}
+
+@keyframes softFloat {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+/* animated KPI values */
+.a-card .value,
+.ai-metric {
+  text-shadow: 0 0 22px rgba(0,212,255,0.38);
+}
+
+/* better mobile polish */
+@media(max-width:768px) {
+  h1.hero-title {
+    font-size: 3.2rem;
+  }
+
+  #hero-map {
+    animation: none;
+  }
+
+  .section {
+    padding: 3rem 1.2rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ NAV ═══════════════════════════════ -->
+<nav id="nav">
+  <a class="nav-logo" href="#" onclick="showPage('landing')">
+    <div class="nav-logo-dot"></div>
+    EcoVision
+  </a>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="showPage('landing')">Home</button>
+    <button class="nav-link" onclick="showPage('livemap')">Live Map</button>
+    <button class="nav-link" onclick="showPage('analytics')">Analytics</button>
+    <button class="nav-link" onclick="showPage('alerts')">Alerts</button>
+    <button class="nav-link" onclick="showPage('ai')">AI Predict</button>
+    <button class="nav-link" onclick="showPage('admin')">Admin</button>
+  </div>
+  <div class="nav-badge">
+    <div class="nav-badge-dot"></div>
+    System Live
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════ LANDING PAGE ═══════════════════════════════ -->
+<div id="page-landing" class="page active">
+  <!-- Hero -->
+  <div class="hero-section">
+    <div id="hero-bg">
+      <div class="hero-grid"></div>
+      <div class="hero-orb1"></div>
+      <div class="hero-orb2"></div>
+      <div class="hero-orb3"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-left">
+        <div class="tag"><div class="tag-dot"></div> AI-Powered · RNSIT Campus</div>
+        <h1 class="hero-title"><span class="gradient-text">Predict.<br>Protect.<br>Prevent.</span></h1>
+        <p class="hero-sub">EcoVision is the intelligent campus waste monitoring and emergency management platform for RNS Institute of Technology — powered by real-time AI analytics.</p>
+        <div class="btn-group">
+          <button class="btn-primary" onclick="showPage('livemap')">▶ Launch Monitoring</button>
+          <button class="btn-ghost" onclick="showPage('analytics')">View Analytics</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-top:2rem">
+          <div class="stat-chip"><div class="val">97%</div><div class="lbl">Uptime</div></div>
+          <div class="stat-chip"><div class="val">24</div><div class="lbl">Zones</div></div>
+          <div class="stat-chip"><div class="val">0.4s</div><div class="lbl">Latency</div></div>
+        </div>
+      </div>
+      <div class="hero-map-preview">
+        <div id="hero-map">
+          <img id="campus-map-img" src="https://i.imgur.com/placeholder.png" alt="RNSIT Campus Map" onerror="this.style.display='none';document.getElementById('hero-map-fallback').style.display='flex'">
+          <div id="hero-map-fallback" style="display:flex;width:100%;height:360px;align-items:center;justify-content:center;flex-direction:column;gap:1rem">
+            <canvas id="previewMapCanvas" width="540" height="360" style="border-radius:16px;width:100%;height:100%"></canvas>
+          </div>
+          <div class="scan-overlay"><div class="scan-line"></div></div>
+          <div class="map-overlay"></div>
+          <div class="float-stat" style="top:15%;left:15%;animation-delay:0s">
+            <div style="font-size:0.65rem;color:var(--text3);margin-bottom:2px">FOOD COURT</div>
+            <div style="color:var(--red);font-family:var(--font-mono);font-size:0.9rem;font-weight:600">● OVERFLOW</div>
+          </div>
+          <div class="float-stat" style="top:40%;right:10%;animation-delay:2s">
+            <div style="font-size:0.65rem;color:var(--text3);margin-bottom:2px">LIBRARY</div>
+            <div style="color:var(--yellow);font-family:var(--font-mono);font-size:0.9rem;font-weight:600">◑ HIGH RISK</div>
+          </div>
+          <div class="float-stat" style="bottom:25%;left:20%;animation-delay:1s">
+            <div style="font-size:0.65rem;color:var(--text3);margin-bottom:2px">CROWD DENSITY</div>
+            <div style="color:var(--cyan);font-family:var(--font-mono);font-size:0.9rem;font-weight:600">82% occupied</div>
+          </div>
+        </div>
+        <div style="margin-top:1rem;display:flex;justify-content:center;gap:1.5rem;font-size:0.75rem;color:var(--text3)">
+          <span><span style="color:var(--red)">●</span> Overflow Risk</span>
+          <span><span style="color:var(--orange)">●</span> High Risk</span>
+          <span><span style="color:var(--yellow)">●</span> Moderate</span>
+          <span><span style="color:var(--green)">●</span> Low Risk</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="section">
+    <div class="divider"></div>
+    <div class="sec-header" style="text-align:center">
+      <div class="tag" style="margin:0 auto 1rem"><div class="tag-dot"></div> Core Systems</div>
+      <h2>Intelligent Campus Intelligence</h2>
+      <p style="margin:0 auto">Six integrated AI systems working in real-time to keep the RNSIT campus safe, clean, and optimally managed.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card" onclick="showPage('livemap')">
+        <div class="feature-icon cyan">🗺️</div>
+        <h3>Live Zone Mapping</h3>
+        <p>Real-time campus map with crowd density heatmaps, waste overflow zones, and building-level occupancy visualization across all RNSIT blocks.</p>
+      </div>
+      <div class="feature-card" onclick="showPage('ai')">
+        <div class="feature-icon blue">🧠</div>
+        <h3>AI Prediction Engine</h3>
+        <p>Machine learning models predict waste overflow and crowd surges up to 60 minutes in advance using occupancy patterns, event schedules, and historical data.</p>
+      </div>
+      <div class="feature-card" onclick="showPage('alerts')">
+        <div class="feature-icon orange">🚨</div>
+        <h3>Emergency Management</h3>
+        <p>Instant severity-graded alerts with automated evacuation routing, emergency contact dispatch, and real-time broadcast system.</p>
+      </div>
+      <div class="feature-card" onclick="showPage('analytics')">
+        <div class="feature-icon green">📊</div>
+        <h3>Smart Analytics</h3>
+        <p>Deep insights into campus activity patterns, waste generation trends, peak hours, and actionable AI recommendations for operational efficiency.</p>
+      </div>
+      <div class="feature-card" onclick="showPage('admin')">
+        <div class="feature-icon cyan">⚙️</div>
+        <h3>Admin Control Center</h3>
+        <p>Centralized management of sensors, camera feeds, alert systems, event scheduling, and AI model configurations with role-based access.</p>
+      </div>
+      <div class="feature-card" onclick="showPage('ai')">
+        <div class="feature-icon blue">🔮</div>
+        <h3>Overflow Forecasting</h3>
+        <p>Predictive waste accumulation modeling identifies hotspots before they become problems, supporting timely intervention and resource allocation.</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Emergency Preview -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem" id="landing-preview">
+      <div>
+        <div class="tag mb-md"><div class="tag-dot" style="background:var(--red);box-shadow:0 0 8px var(--red)"></div> Live Alerts</div>
+        <h2 class="heading" style="font-size:1.5rem;margin-bottom:1rem">Zero-delay emergency response</h2>
+        <div style="display:flex;flex-direction:column;gap:0.75rem">
+          <div class="alert-card critical" style="animation:alertPulse 2s infinite">
+            <div class="alert-icon critical">🔴</div>
+            <div>
+              <div style="font-weight:600;font-size:0.875rem;margin-bottom:4px">Overflow detected — Food Court</div>
+              <div style="font-size:0.78rem;color:var(--text2)">Crowd density 94% · Waste overflow imminent</div>
+              <div style="font-size:0.7rem;color:var(--red);margin-top:4px;font-family:var(--font-mono)">2 min ago · Auto-escalated</div>
+            </div>
+          </div>
+          <div class="alert-card high">
+            <div class="alert-icon high">🟠</div>
+            <div>
+              <div style="font-weight:600;font-size:0.875rem;margin-bottom:4px">High occupancy — Auditorium</div>
+              <div style="font-size:0.78rem;color:var(--text2)">Crowd at 78% · Predicted peak in 15 min</div>
+              <div style="font-size:0.7rem;color:var(--orange);margin-top:4px;font-family:var(--font-mono)">5 min ago · AI predicted</div>
+            </div>
+          </div>
+          <div class="alert-card moderate">
+            <div class="alert-icon moderate">🟡</div>
+            <div>
+              <div style="font-weight:600;font-size:0.875rem;margin-bottom:4px">Moderate waste — MBA Block</div>
+              <div style="font-size:0.78rem;color:var(--text2)">Bin capacity at 65% · Collection advised</div>
+              <div style="font-size:0.7rem;color:var(--yellow);margin-top:4px;font-family:var(--font-mono)">12 min ago · Sensor alert</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="tag mb-md"><div class="tag-dot" style="background:var(--blue);box-shadow:0 0 8px var(--blue)"></div> AI Insights</div>
+        <h2 class="heading" style="font-size:1.5rem;margin-bottom:1rem">Predictive intelligence at work</h2>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:1.5rem">
+          <canvas id="landingChart" width="400" height="200"></canvas>
+          <div style="display:flex;justify-content:space-between;margin-top:0.75rem;font-size:0.72rem;color:var(--text3)">
+            <span>8AM</span><span>10AM</span><span>12PM</span><span>2PM</span><span>4PM</span><span>6PM</span>
+          </div>
+          <div style="display:flex;gap:1.5rem;margin-top:1rem;font-size:0.78rem">
+            <span><span style="color:var(--cyan)">─</span> Actual crowd</span>
+            <span><span style="color:var(--blue)">─ ─</span> AI Predicted</span>
+            <span><span style="color:var(--red)">─</span> Risk threshold</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div style="margin-bottom:0.5rem">
+      <span style="font-family:var(--font-head);color:var(--text);font-size:1rem">EcoVision</span> — Smart Campus Intelligence System
+    </div>
+    <div>Built for <span>RNS Institute of Technology</span> · Hacktastic 2 · <span>AI-Powered Campus Monitoring</span></div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════ LIVE MAP PAGE ═══════════════════════════════ -->
+<div id="page-livemap" class="page">
+  <div id="live-map-container">
+    <!-- Sidebar -->
+    <div id="map-sidebar">
+      <div class="flex-between mb-md">
+        <span class="heading" style="font-size:0.9rem">Campus Monitor</span>
+        <span class="flex gap-sm"><div class="status-dot green"></div><span style="font-size:0.7rem;color:var(--green)">Live</span></span>
+      </div>
+
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:0.75rem;margin-bottom:0.5rem">
+        <div style="font-size:0.7rem;color:var(--text3);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.06em">Campus Overview</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem">
+          <div style="text-align:center"><div style="font-family:var(--font-mono);font-size:1.2rem;color:var(--cyan)">82%</div><div style="font-size:0.65rem;color:var(--text3)">Overall Occ.</div></div>
+          <div style="text-align:center"><div style="font-family:var(--font-mono);font-size:1.2rem;color:var(--red)">3</div><div style="font-size:0.65rem;color:var(--text3)">Active Alerts</div></div>
+          <div style="text-align:center"><div style="font-family:var(--font-mono);font-size:1.2rem;color:var(--yellow)">7</div><div style="font-size:0.65rem;color:var(--text3)">Monitored Zones</div></div>
+          <div style="text-align:center"><div style="font-family:var(--font-mono);font-size:1.2rem;color:var(--green)">24</div><div style="font-size:0.65rem;color:var(--text3)">Sensors Active</div></div>
+        </div>
+      </div>
+
+      <div class="sidebar-title">Buildings</div>
+      <div id="building-list"></div>
+
+      <div class="sidebar-title mt-md">Legend</div>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:0.75rem">
+        <div class="flex gap-sm"><div class="status-dot red"></div> Overflow Risk — High crowd/waste</div>
+        <div class="flex gap-sm"><div class="status-dot" style="background:var(--orange);box-shadow:0 0 8px var(--orange)"></div> High Risk — Monitor closely</div>
+        <div class="flex gap-sm"><div class="status-dot yellow"></div> Moderate Risk — Watch zone</div>
+        <div class="flex gap-sm"><div class="status-dot green"></div> Low Risk — Normal operation</div>
+      </div>
+
+      <div class="sidebar-title mt-md">AI Recommendations</div>
+      <div style="display:flex;flex-direction:column;gap:0.5rem">
+        <div style="background:rgba(255,51,85,0.08);border:1px solid rgba(255,51,85,0.2);border-radius:8px;padding:0.625rem;font-size:0.75rem">
+          <div style="color:var(--red);font-weight:600;margin-bottom:4px">⚠ Immediate Action</div>
+          Deploy waste collection to Food Court — overflow in ~8 min
+        </div>
+        <div style="background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.15);border-radius:8px;padding:0.625rem;font-size:0.75rem">
+          <div style="color:var(--yellow);font-weight:600;margin-bottom:4px">◑ Advisory</div>
+          Redirect student flow from Auditorium east entrance
+        </div>
+        <div style="background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.15);border-radius:8px;padding:0.625rem;font-size:0.75rem">
+          <div style="color:var(--cyan);font-weight:600;margin-bottom:4px">🧠 AI Insight</div>
+          Peak density predicted 12:30–1:30 PM — prepare resources
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Map Area -->
+    <div id="map-main">
+      <img 
+  id="liveCampusMap"
+  src="rnsit-campus-map.jpeg"
+  alt="RNSIT Campus Live Map"
+  style="
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    display:block;
+    background:#03070f;
+  "
+/>
+      <!-- <canvas id="livemapCanvas" style="width:100%;height:100%;display:block;cursor:crosshair"></canvas> -->
+
+      <!-- AI Alert -->
+      <div class="map-ai-alert">
+        <div class="flex-between mb-sm">
+          <span style="font-size:0.7rem;font-family:var(--font-mono);color:var(--red)">● CRITICAL ALERT</span>
+          <span style="font-size:0.65rem;color:var(--text3)">2m ago</span>
+        </div>
+        <div style="font-weight:600;font-size:0.85rem;margin-bottom:4px">Food Court — Overflow Detected</div>
+        <div style="font-size:0.78rem;color:var(--text2)">Crowd density at 94%. Waste accumulation exceeds threshold. Immediate action required.</div>
+        <div style="margin-top:8px;display:flex;gap:6px">
+          <button class="btn-primary" style="padding:5px 10px;font-size:0.72rem" onclick="showPage('alerts')">View Alert</button>
+          <button class="btn-ghost" style="padding:5px 10px;font-size:0.72rem">Dismiss</button>
+        </div>
+      </div>
+
+      <!-- Map Info -->
+      <div class="map-overlay-info">
+        <div style="font-size:0.7rem;color:var(--text3);margin-bottom:6px;font-family:var(--font-mono)">RNSIT CAMPUS · LIVE VIEW</div>
+        <div style="font-size:0.8rem;margin-bottom:8px">Click any building to view details</div>
+        <div class="flex gap-sm">
+          <div class="status-dot green"></div>
+          <span style="font-size:0.75rem">Real-time sensor data active</span>
+        </div>
+      </div>
+
+      <!-- Zoom Controls -->
+      <div class="map-controls">
+        <button class="map-ctrl-btn" onclick="mapZoom(1.2)">+</button>
+        <button class="map-ctrl-btn" onclick="mapZoom(0.8)">−</button>
+        <button class="map-ctrl-btn" onclick="resetMapView()" title="Reset">⊙</button>
+      </div>
+
+      <!-- Building Popup -->
+      <div class="building-popup" id="buildingPopup">
+        <div class="flex-between mb-sm">
+          <span class="heading" id="popup-name" style="font-size:0.9rem">Building</span>
+          <button onclick="closePopup()" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:1rem">✕</button>
+        </div>
+        <div id="popup-risk" class="risk-badge mb-sm">LOW RISK</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.75rem">
+          <div style="background:var(--bg3);border-radius:8px;padding:0.5rem;text-align:center">
+            <div class="mono" id="popup-occ" style="font-size:1.1rem;color:var(--cyan)">72%</div>
+            <div style="font-size:0.65rem;color:var(--text3)">Occupancy</div>
+          </div>
+          <div style="background:var(--bg3);border-radius:8px;padding:0.5rem;text-align:center">
+            <div class="mono" id="popup-waste" style="font-size:1.1rem;color:var(--yellow)">45%</div>
+            <div style="font-size:0.65rem;color:var(--text3)">Waste Level</div>
+          </div>
+        </div>
+        <div id="popup-rec" style="background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.15);border-radius:8px;padding:0.625rem;font-size:0.75rem;color:var(--text2)"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ ANALYTICS PAGE ═══════════════════════════════ -->
+<div id="page-analytics" class="page">
+  <div class="section">
+    <div class="sec-header flex-between">
+      <div>
+        <div class="tag mb-sm"><div class="tag-dot"></div> Campus Analytics</div>
+        <h2>Waste &amp; Occupancy Intelligence</h2>
+        <p>Real-time and historical campus activity analytics with AI-driven insights</p>
+      </div>
+      <div class="flex gap-sm">
+        <div class="tab-bar">
+          <button class="tab-btn active">Today</button>
+          <button class="tab-btn">Week</button>
+          <button class="tab-btn">Month</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI Row -->
+    <div class="analytics-grid mb-lg">
+      <div class="a-card">
+        <div class="title">Overall Occupancy</div>
+        <div class="value">82%</div>
+        <div class="sub">↑ 8% from yesterday</div>
+      </div>
+      <div class="a-card">
+        <div class="title">Waste Generated</div>
+        <div class="value" style="color:var(--yellow)">147kg</div>
+        <div class="sub" style="color:var(--orange)">↑ 12% above norm</div>
+      </div>
+      <div class="a-card">
+        <div class="title">Active Incidents</div>
+        <div class="value" style="color:var(--red)">3</div>
+        <div class="sub" style="color:var(--text2)">2 overflow, 1 high</div>
+      </div>
+      <div class="a-card">
+        <div class="title">AI Predictions</div>
+        <div class="value" style="color:var(--green)">94%</div>
+        <div class="sub" style="color:var(--green)">Accuracy today</div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="charts-row mb-md">
+      <div class="chart-area">
+        <div class="chart-title">
+          <span class="heading">Hourly Crowd Density Trend</span>
+          <span class="flex gap-sm" style="font-size:0.75rem;color:var(--text2)"><div class="status-dot green"></div> Live</span>
+        </div>
+        <canvas id="crowdTrendChart" height="180"></canvas>
+        <div style="display:flex;justify-content:space-between;margin-top:0.5rem;font-size:0.68rem;color:var(--text3)">
+          <span>8AM</span><span>9AM</span><span>10AM</span><span>11AM</span><span>12PM</span><span>1PM</span><span>2PM</span><span>3PM</span><span>4PM</span><span>5PM</span><span>6PM</span>
+        </div>
+      </div>
+      <div class="chart-area">
+        <div class="chart-title"><span class="heading">Waste by Zone</span></div>
+        <canvas id="wasteZoneChart" height="180"></canvas>
+      </div>
+    </div>
+
+    <!-- Building Analysis -->
+    <div class="charts-row mb-md">
+      <div class="chart-area">
+        <div class="chart-title"><span class="heading">Building Occupancy Now</span></div>
+        <div id="buildingBars" style="display:flex;flex-direction:column;gap:10px"></div>
+      </div>
+      <div class="chart-area">
+        <div class="chart-title"><span class="heading">Weekly Activity</span></div>
+        <canvas id="weeklyChart" height="180"></canvas>
+        <div style="display:flex;justify-content:space-between;margin-top:0.5rem;font-size:0.68rem;color:var(--text3)">
+          <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Recommendations -->
+    <div class="chart-area">
+      <div class="chart-title"><span class="heading">🧠 AI Recommendations</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem">
+        <div style="background:rgba(255,51,85,0.05);border:1px solid rgba(255,51,85,0.2);border-radius:12px;padding:1rem">
+          <div style="color:var(--red);font-weight:700;margin-bottom:6px;font-size:0.85rem">⚠ High Priority</div>
+          <p style="font-size:0.82rem;color:var(--text2);line-height:1.6">Deploy additional waste collection units to Food Court and Auditorium area before 12:30 PM peak. Current trajectory shows 97% overflow probability.</p>
+        </div>
+        <div style="background:rgba(255,215,0,0.04);border:1px solid rgba(255,215,0,0.15);border-radius:12px;padding:1rem">
+          <div style="color:var(--yellow);font-weight:700;margin-bottom:6px;font-size:0.85rem">◑ Moderate Action</div>
+          <p style="font-size:0.82rem;color:var(--text2);line-height:1.6">MBA Block bins are at 65% capacity. Schedule collection by 2 PM to prevent elevated waste levels during afternoon peak hours.</p>
+        </div>
+        <div style="background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.15);border-radius:12px;padding:1rem">
+          <div style="color:var(--cyan);font-weight:700;margin-bottom:6px;font-size:0.85rem">🧠 Optimization</div>
+          <p style="font-size:0.82rem;color:var(--text2);line-height:1.6">Historical data suggests redistributing 2 waste bins from IT Block (typically low) to Gallery Area during Fridays. 23% efficiency gain projected.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ ALERTS PAGE ═══════════════════════════════ -->
+<div id="page-alerts" class="page">
+  <div class="section">
+    <div class="sec-header">
+      <div class="tag mb-sm"><div class="tag-dot" style="background:var(--red);box-shadow:0 0 8px var(--red)"></div> Emergency Management</div>
+      <h2>Alert &amp; Response Center</h2>
+      <p>Real-time incident management with AI-generated safety recommendations</p>
+    </div>
+
+    <!-- System Status Bar -->
+    <div style="background:rgba(255,51,85,0.06);border:1px solid rgba(255,51,85,0.2);border-radius:14px;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+      <div class="flex gap-md">
+        <div class="status-dot red blink"></div>
+        <span style="font-weight:600">EMERGENCY MONITORING ACTIVE</span>
+        <span style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text2)" id="alertTimer">System time: 14:23:07</span>
+      </div>
+      <div class="flex gap-sm">
+        <button class="btn-primary" style="background:var(--red);font-size:0.8rem;padding:0.5rem 1rem" onclick="triggerBroadcast()">📢 Broadcast Alert</button>
+        <button class="btn-ghost" style="font-size:0.8rem;padding:0.5rem 1rem;border-color:rgba(255,51,85,0.3);color:var(--red)" onclick="showLockdown()">🔒 Lockdown Mode</button>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 300px;gap:1.5rem">
+      <!-- Alert Feed -->
+      <div>
+        <div class="flex-between mb-md">
+          <span class="heading" style="font-size:1rem">Active Incidents</span>
+          <div class="tab-bar">
+            <button class="tab-btn active">All</button>
+            <button class="tab-btn">Critical</button>
+            <button class="tab-btn">Resolved</button>
+          </div>
+        </div>
+
+        <div class="alert-grid" id="alertFeed">
+          <div class="alert-card critical flash">
+            <div class="alert-icon critical">🔴</div>
+            <div style="flex:1">
+              <div class="flex-between"><span style="font-weight:700">OVERFLOW — Food Court</span><span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text3)">14:21:03</span></div>
+              <div style="font-size:0.82rem;color:var(--text2);margin:6px 0">Crowd density at 94% with active waste overflow. Immediate intervention required. AI confidence: 97%</div>
+              <div class="flex gap-sm">
+                <span class="risk-badge risk-overflow">● Overflow Risk</span>
+                <span style="font-size:0.72rem;color:var(--text3)">Zone A · Auto-escalated</span>
+              </div>
+              <div style="margin-top:8px;display:flex;gap:6px">
+                <button class="btn-ghost" style="padding:4px 10px;font-size:0.72px;font-size:0.72rem">Acknowledge</button>
+                <button class="btn-ghost" style="padding:4px 10px;font-size:0.72rem">View on Map</button>
+                <button class="btn-ghost" style="padding:4px 10px;font-size:0.72rem;color:var(--green)">Resolve</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert-card high">
+            <div class="alert-icon high">🟠</div>
+            <div style="flex:1">
+              <div class="flex-between"><span style="font-weight:700">HIGH OCCUPANCY — Auditorium</span><span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text3)">14:18:45</span></div>
+              <div style="font-size:0.82rem;color:var(--text2);margin:6px 0">78% crowd capacity. Event in progress, predicted to reach critical threshold within 15 minutes.</div>
+              <div class="flex gap-sm"><span class="risk-badge risk-high">● High Risk</span><span style="font-size:0.72rem;color:var(--text3)">Auditorium Block</span></div>
+              <div style="margin-top:8px;display:flex;gap:6px">
+                <button class="btn-ghost" style="padding:4px 10px;font-size:0.72rem">Acknowledge</button>
+                <button class="btn-ghost" style="padding:4px 10px;font-size:0.72rem">View on Map</button>
+                <button class="btn-ghost" style="padding:4px 10px;font-size:0.72rem;color:var(--green)">Resolve</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert-card moderate">
+            <div class="alert-icon moderate">🟡</div>
+            <div style="flex:1">
+              <div class="flex-between"><span style="font-weight:700">WASTE LEVEL — MBA Block</span><span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text3)">14:10:22</span></div>
+              <div style="font-size:0.82rem;color:var(--text2);margin:6px 0">Bin capacity at 65%. Waste generation rate suggests overflow in approximately 2 hours without collection.</div>
+              <div class="flex gap-sm"><span class="risk-badge risk-moderate">● Moderate Risk</span><span style="font-size:0.72rem;color:var(--text3)">MBA Block · Zone C</span></div>
+            </div>
+          </div>
+
+          <div class="alert-card resolved">
+            <div class="alert-icon resolved">✅</div>
+            <div style="flex:1">
+              <div class="flex-between"><span style="font-weight:700">RESOLVED — Library Overflow</span><span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text3)">13:45:10</span></div>
+              <div style="font-size:0.82rem;color:var(--text2);margin:6px 0">Waste collected and crowd redistributed. Situation normalized. Response time: 8 minutes.</div>
+              <div class="flex gap-sm"><span class="risk-badge risk-low">✓ Resolved</span><span style="font-size:0.72rem;color:var(--text3)">Library Block · Closed</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Panel -->
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <!-- Emergency Contacts -->
+        <div class="glass-card">
+          <div class="heading mb-md" style="font-size:0.9rem">Emergency Contacts</div>
+          <div style="display:flex;flex-direction:column;gap:0.75rem">
+            <div class="flex-between" style="font-size:0.82rem">
+              <div><div style="font-weight:600">Security Control</div><div class="text2">Main Gate & Campus</div></div>
+              <button class="btn-ghost" style="padding:4px 10px;font-size:0.72rem">Call</button>
+            </div>
+            <div class="flex-between" style="font-size:0.82rem">
+              <div><div style="font-weight:600">Waste Management</div><div class="text2">Collection Team</div></div>
+              <button class="btn-ghost" style="padding:4px 10px;font-size:0.72rem">Call</button>
+            </div>
+            <div class="flex-between" style="font-size:0.82rem">
+              <div><div style="font-weight:600">Medical Center</div><div class="text2">Campus Clinic</div></div>
+              <button class="btn-ghost" style="padding:4px 10px;font-size:0.72rem">Call</button>
+            </div>
+            <div class="flex-between" style="font-size:0.82rem">
+              <div><div style="font-weight:600">Admin Office</div><div class="text2">Emergency Line</div></div>
+              <button class="btn-ghost" style="padding:4px 10px;font-size:0.72rem">Call</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Safety Suggestions -->
+        <div class="glass-card">
+          <div class="heading mb-md" style="font-size:0.9rem">🧠 AI Safety Suggestions</div>
+          <div style="display:flex;flex-direction:column;gap:0.75rem;font-size:0.8rem;color:var(--text2)">
+            <div style="border-left:2px solid var(--red);padding-left:10px">Deploy 2 waste collection units to Food Court via North Gate access route</div>
+            <div style="border-left:2px solid var(--orange);padding-left:10px">Activate Auditorium east exit for crowd overflow management</div>
+            <div style="border-left:2px solid var(--cyan);padding-left:10px">Alert MBA Block facility staff for bin collection scheduling</div>
+          </div>
+        </div>
+
+        <!-- System Status -->
+        <div class="glass-card">
+          <div class="heading mb-md" style="font-size:0.9rem">System Status</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:0.8rem">
+            <div class="flex-between"><span>Sensor Network</span><span class="flex gap-sm"><div class="status-dot green"></div><span class="green">Online</span></span></div>
+            <div class="flex-between"><span>AI Engine</span><span class="flex gap-sm"><div class="status-dot green"></div><span class="green">Running</span></span></div>
+            <div class="flex-between"><span>Alert System</span><span class="flex gap-sm"><div class="status-dot green"></div><span class="green">Active</span></span></div>
+            <div class="flex-between"><span>Emergency Broadcast</span><span class="flex gap-sm"><div class="status-dot green"></div><span class="green">Ready</span></span></div>
+            <div class="flex-between"><span>Backup Power</span><span class="flex gap-sm"><div class="status-dot yellow"></div><span class="yellow">Standby</span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ AI PREDICTION PAGE ═══════════════════════════════ -->
+<div id="page-ai" class="page">
+  <div class="section">
+    <div class="sec-header">
+      <div class="tag mb-sm"><div class="tag-dot" style="background:var(--blue);box-shadow:0 0 8px var(--blue)"></div> Predictive AI Engine</div>
+      <h2>Crowd & Waste Forecasting</h2>
+      <p>Machine learning models predict overflow risk up to 60 minutes in advance</p>
+    </div>
+
+    <!-- AI Prediction Cards -->
+    <div class="ai-grid mb-lg">
+      <div class="ai-card">
+        <div style="font-size:0.75rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem">Overflow Risk — Next 30 min</div>
+        <div class="ai-metric">87%</div>
+        <div style="font-size:0.82rem;color:var(--text2);margin-top:8px">Food Court overflow near-certain. Peak crowd surge expected 12:30–13:15 PM</div>
+        <div style="height:2px;background:linear-gradient(90deg,var(--red) 87%,var(--bg3) 87%);border-radius:2px;margin-top:1rem"></div>
+      </div>
+      <div class="ai-card">
+        <div style="font-size:0.75rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem">Predicted Peak Crowd</div>
+        <div class="ai-metric" style="background:linear-gradient(135deg,var(--yellow),var(--orange));-webkit-background-clip:text;background-clip:text">2,840</div>
+        <div style="font-size:0.82rem;color:var(--text2);margin-top:8px">Students across campus at predicted peak — 23% above baseline capacity</div>
+        <div style="height:2px;background:linear-gradient(90deg,var(--yellow) 73%,var(--bg3) 73%);border-radius:2px;margin-top:1rem"></div>
+      </div>
+      <div class="ai-card">
+        <div style="font-size:0.75rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem">Waste Overflow Zones</div>
+        <div class="ai-metric" style="background:linear-gradient(135deg,var(--orange),var(--red));-webkit-background-clip:text;background-clip:text">4</div>
+        <div style="font-size:0.82rem;color:var(--text2);margin-top:8px">Zones predicted to exceed waste capacity within 45 minutes without intervention</div>
+        <div style="height:2px;background:linear-gradient(90deg,var(--orange) 40%,var(--bg3) 40%);border-radius:2px;margin-top:1rem"></div>
+      </div>
+      <div class="ai-card">
+        <div style="font-size:0.75rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem">Model Accuracy</div>
+        <div class="ai-metric" style="background:linear-gradient(135deg,var(--green),var(--cyan));-webkit-background-clip:text;background-clip:text">94%</div>
+        <div style="font-size:0.82rem;color:var(--text2);margin-top:8px">Today's prediction accuracy based on 28 resolved and confirmed events</div>
+        <div style="height:2px;background:linear-gradient(90deg,var(--green) 94%,var(--bg3) 94%);border-radius:2px;margin-top:1rem"></div>
+      </div>
+    </div>
+
+    <!-- Prediction Chart & Simulation -->
+    <div class="charts-row mb-md">
+      <div class="chart-area">
+        <div class="chart-title">
+          <span class="heading">Crowd Prediction — Next 60 Minutes</span>
+          <span style="font-size:0.75rem;color:var(--blue);background:rgba(26,107,255,0.1);border:1px solid rgba(26,107,255,0.2);padding:3px 10px;border-radius:6px">AI Live</span>
+        </div>
+        <canvas id="predictionChart" height="200"></canvas>
+        <div style="display:flex;justify-content:space-between;margin-top:0.5rem;font-size:0.68rem;color:var(--text3)">
+          <span>Now</span><span>+10m</span><span>+20m</span><span>+30m</span><span>+40m</span><span>+50m</span><span>+60m</span>
+        </div>
+      </div>
+      <div class="chart-area">
+        <div class="chart-title"><span class="heading">Zone Risk Forecast</span></div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div id="zoneRiskList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- What-If Simulation -->
+    <div class="chart-area mb-md">
+      <div class="chart-title">
+        <span class="heading">🎯 What-If Scenario Simulator</span>
+        <span style="font-size:0.78rem;color:var(--text2)">Simulate crowd impact of events</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start">
+        <div>
+          <div class="form-group">
+            <label class="form-label">Event Type</label>
+            <select class="form-input form-select" id="simEvent" onchange="runSimulation()">
+              <option>Cultural Fest (Ground)</option>
+              <option>Sports Day (Basketball Court)</option>
+              <option>Seminar (Auditorium)</option>
+              <option>Exam Week (All Blocks)</option>
+              <option>Guest Lecture (MBA Block)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Expected Attendees</label>
+            <input type="range" min="100" max="3000" value="1500" class="form-input" id="simAttendees" oninput="updateSimAttendees(this.value);runSimulation()" style="padding:0;height:6px;accent-color:var(--cyan)">
+            <div style="font-family:var(--font-mono);font-size:0.85rem;color:var(--cyan);margin-top:4px" id="simAttendeesVal">1,500 students</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Event Duration</label>
+            <select class="form-input form-select" id="simDuration" onchange="runSimulation()">
+              <option>2 hours</option>
+              <option>4 hours</option>
+              <option>Full day</option>
+              <option>2 days</option>
+            </select>
+          </div>
+          <button class="btn-primary" onclick="runSimulation()" style="width:100%">▶ Run Simulation</button>
+        </div>
+        <div id="simResult" style="background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:1.25rem">
+          <div class="heading mb-md" style="font-size:0.9rem">Simulation Results</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem">
+            <div style="text-align:center;background:var(--bg2);border-radius:10px;padding:0.75rem">
+              <div id="sim-peak" class="mono" style="font-size:1.4rem;color:var(--orange)">76%</div>
+              <div style="font-size:0.68rem;color:var(--text3)">Peak Density</div>
+            </div>
+            <div style="text-align:center;background:var(--bg2);border-radius:10px;padding:0.75rem">
+              <div id="sim-waste" class="mono" style="font-size:1.4rem;color:var(--red)">HIGH</div>
+              <div style="font-size:0.68rem;color:var(--text3)">Waste Risk</div>
+            </div>
+          </div>
+          <div id="sim-rec" style="font-size:0.8rem;color:var(--text2);line-height:1.65;background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.12);border-radius:8px;padding:0.75rem">
+            With 1,500 attendees at Ground, expect crowd spillover to Gallery Area. Deploy 3 waste units. Activate east campus parking for overflow.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dangerous Zone Detection -->
+    <div class="chart-area">
+      <div class="chart-title"><span class="heading">⚡ Detected Risk Zones</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem">
+        <div style="background:rgba(255,51,85,0.06);border:1px solid rgba(255,51,85,0.25);border-radius:12px;padding:1rem">
+          <div style="font-size:0.7rem;font-family:var(--font-mono);color:var(--red);margin-bottom:6px">ZONE A · OVERFLOW</div>
+          <div style="font-weight:700;margin-bottom:4px">Food Court</div>
+          <div style="font-size:0.78rem;color:var(--text2)">Crowd 94% · Waste 88%</div>
+          <div style="margin-top:8px;height:4px;background:var(--bg3);border-radius:2px"><div style="height:100%;width:94%;background:var(--red);border-radius:2px"></div></div>
+        </div>
+        <div style="background:rgba(255,140,0,0.06);border:1px solid rgba(255,140,0,0.2);border-radius:12px;padding:1rem">
+          <div style="font-size:0.7rem;font-family:var(--font-mono);color:var(--orange);margin-bottom:6px">ZONE B · HIGH</div>
+          <div style="font-weight:700;margin-bottom:4px">Auditorium</div>
+          <div style="font-size:0.78rem;color:var(--text2)">Crowd 78% · Waste 55%</div>
+          <div style="margin-top:8px;height:4px;background:var(--bg3);border-radius:2px"><div style="height:100%;width:78%;background:var(--orange);border-radius:2px"></div></div>
+        </div>
+        <div style="background:rgba(255,215,0,0.04);border:1px solid rgba(255,215,0,0.15);border-radius:12px;padding:1rem">
+          <div style="font-size:0.7rem;font-family:var(--font-mono);color:var(--yellow);margin-bottom:6px">ZONE C · MODERATE</div>
+          <div style="font-weight:700;margin-bottom:4px">MBA Block</div>
+          <div style="font-size:0.78rem;color:var(--text2)">Crowd 65% · Waste 62%</div>
+          <div style="margin-top:8px;height:4px;background:var(--bg3);border-radius:2px"><div style="height:100%;width:65%;background:var(--yellow);border-radius:2px"></div></div>
+        </div>
+        <div style="background:rgba(255,215,0,0.04);border:1px solid rgba(255,215,0,0.15);border-radius:12px;padding:1rem">
+          <div style="font-size:0.7rem;font-family:var(--font-mono);color:var(--yellow);margin-bottom:6px">ZONE D · MODERATE</div>
+          <div style="font-weight:700;margin-bottom:4px">Library</div>
+          <div style="font-size:0.78rem;color:var(--text2)">Crowd 71% · Waste 58%</div>
+          <div style="margin-top:8px;height:4px;background:var(--bg3);border-radius:2px"><div style="height:100%;width:71%;background:var(--yellow);border-radius:2px"></div></div>
+        </div>
+        <div style="background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.12);border-radius:12px;padding:1rem">
+          <div style="font-size:0.7rem;font-family:var(--font-mono);color:var(--green);margin-bottom:6px">ZONE E · LOW</div>
+          <div style="font-weight:700;margin-bottom:4px">CS/IT Block</div>
+          <div style="font-size:0.78rem;color:var(--text2)">Crowd 42% · Waste 35%</div>
+          <div style="margin-top:8px;height:4px;background:var(--bg3);border-radius:2px"><div style="height:100%;width:42%;background:var(--green);border-radius:2px"></div></div>
+        </div>
+        <div style="background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.12);border-radius:12px;padding:1rem">
+          <div style="font-size:0.7rem;font-family:var(--font-mono);color:var(--green);margin-bottom:6px">ZONE F · LOW</div>
+          <div style="font-weight:700;margin-bottom:4px">Hostels</div>
+          <div style="font-size:0.78rem;color:var(--text2)">Crowd 38% · Waste 30%</div>
+          <div style="margin-top:8px;height:4px;background:var(--bg3);border-radius:2px"><div style="height:100%;width:38%;background:var(--green);border-radius:2px"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ ADMIN PAGE ═══════════════════════════════ -->
+<div id="page-admin" class="page">
+  <div class="section">
+    <div class="sec-header">
+      <div class="tag mb-sm"><div class="tag-dot"></div> Administration</div>
+      <h2>Admin Control Panel</h2>
+      <p>Manage sensors, users, alerts, and system configuration</p>
+    </div>
+
+    <div class="admin-layout">
+      <!-- Admin Nav -->
+      <div>
+        <div class="admin-nav">
+          <div class="admin-nav-item active" onclick="showAdminTab('users')">👥 User Management</div>
+          <div class="admin-nav-item" onclick="showAdminTab('sensors')">📡 Sensors & Cameras</div>
+          <div class="admin-nav-item" onclick="showAdminTab('alerts')">🔔 Alert Config</div>
+          <div class="admin-nav-item" onclick="showAdminTab('announce')">📢 Announcements</div>
+          <div class="admin-nav-item" onclick="showAdminTab('events')">📅 Event Scheduling</div>
+          <div class="admin-nav-item" onclick="showAdminTab('reports')">📋 Reports</div>
+          <div class="admin-nav-item" onclick="showAdminTab('ai')">🧠 AI Settings</div>
+          <div class="admin-nav-item" onclick="showAdminTab('emergency')">🚨 Emergency Mode</div>
+        </div>
+      </div>
+
+      <!-- Admin Content -->
+      <div class="admin-content">
+        <!-- Users -->
+        <div id="admin-users">
+          <div class="flex-between mb-lg">
+            <span class="heading" style="font-size:1.1rem">User Management</span>
+            <button class="btn-primary" style="padding:0.5rem 1rem;font-size:0.8rem">+ Add User</button>
+          </div>
+          <table class="admin-table">
+            <thead><tr><th>Name</th><th>Role</th><th>Last Active</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td>Dr. Ramesh Kumar</td><td>Super Admin</td><td>2 min ago</td><td><span class="risk-badge risk-low">Active</span></td><td><button class="btn-ghost" style="padding:3px 8px;font-size:0.72rem">Edit</button></td></tr>
+              <tr><td>Prof. Anita Sharma</td><td>Campus Manager</td><td>8 min ago</td><td><span class="risk-badge risk-low">Active</span></td><td><button class="btn-ghost" style="padding:3px 8px;font-size:0.72rem">Edit</button></td></tr>
+              <tr><td>Security Head</td><td>Security Officer</td><td>1h ago</td><td><span class="risk-badge risk-low">Active</span></td><td><button class="btn-ghost" style="padding:3px 8px;font-size:0.72rem">Edit</button></td></tr>
+              <tr><td>Waste Team Lead</td><td>Operations</td><td>3h ago</td><td><span class="risk-badge risk-moderate">Away</span></td><td><button class="btn-ghost" style="padding:3px 8px;font-size:0.72rem">Edit</button></td></tr>
+              <tr><td>AI Engineer</td><td>Data Analyst</td><td>Yesterday</td><td><span class="risk-badge risk-moderate">Away</span></td><td><button class="btn-ghost" style="padding:3px 8px;font-size:0.72rem">Edit</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Sensors (hidden by default) -->
+        <div id="admin-sensors" style="display:none">
+          <div class="flex-between mb-lg">
+            <span class="heading" style="font-size:1.1rem">Sensor & Camera Network</span>
+            <span class="flex gap-sm"><div class="status-dot green"></div><span style="font-size:0.82rem;color:var(--green)">24/24 Online</span></span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.75rem">
+            <div class="a-card"><div class="title">Crowd Sensors</div><div class="value">18</div><div class="sub">All operational</div></div>
+            <div class="a-card"><div class="title">Waste Sensors</div><div class="value" style="color:var(--green)">12</div><div class="sub">All operational</div></div>
+            <div class="a-card"><div class="title">Camera Feeds</div><div class="value" style="color:var(--cyan)">24</div><div class="sub">Live streaming</div></div>
+            <div class="a-card"><div class="title">AI Processors</div><div class="value" style="color:var(--blue)">4</div><div class="sub">Running</div></div>
+          </div>
+          <div style="margin-top:1.5rem">
+            <table class="admin-table">
+              <thead><tr><th>Sensor ID</th><th>Location</th><th>Type</th><th>Status</th><th>Last Reading</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">SEN-001</td><td>Food Court</td><td>Crowd + Waste</td><td><span class="risk-badge risk-overflow">Overflow</span></td><td class="mono" style="color:var(--red)">94% occ</td></tr>
+                <tr><td class="mono">SEN-002</td><td>Auditorium</td><td>Crowd</td><td><span class="risk-badge risk-high">High</span></td><td class="mono" style="color:var(--orange)">78% occ</td></tr>
+                <tr><td class="mono">SEN-003</td><td>Library</td><td>Crowd + Waste</td><td><span class="risk-badge risk-moderate">Moderate</span></td><td class="mono" style="color:var(--yellow)">71% occ</td></tr>
+                <tr><td class="mono">SEN-004</td><td>MBA Block</td><td>Waste</td><td><span class="risk-badge risk-moderate">Moderate</span></td><td class="mono" style="color:var(--yellow)">65% waste</td></tr>
+                <tr><td class="mono">SEN-005</td><td>CS Block</td><td>Crowd</td><td><span class="risk-badge risk-low">Normal</span></td><td class="mono" style="color:var(--green)">42% occ</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Alerts Config -->
+        <div id="admin-alerts" style="display:none">
+          <div class="heading mb-lg" style="font-size:1.1rem">Alert Configuration</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+            <div>
+              <div class="form-group">
+                <label class="form-label">Overflow Risk Threshold</label>
+                <div class="flex gap-sm">
+                  <input type="range" min="50" max="100" value="90" style="flex:1;accent-color:var(--red)" id="overflowThresh" oninput="document.getElementById('overflowThreshVal').textContent=this.value+'%'">
+                  <span class="mono" id="overflowThreshVal" style="color:var(--red);min-width:36px">90%</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">High Risk Threshold</label>
+                <div class="flex gap-sm">
+                  <input type="range" min="50" max="100" value="75" style="flex:1;accent-color:var(--orange)" id="highThresh" oninput="document.getElementById('highThreshVal').textContent=this.value+'%'">
+                  <span class="mono" id="highThreshVal" style="color:var(--orange);min-width:36px">75%</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Auto-Escalation Delay</label>
+                <select class="form-input form-select">
+                  <option>Immediate (0 min)</option>
+                  <option selected>2 minutes</option>
+                  <option>5 minutes</option>
+                  <option>10 minutes</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex;flex-direction:column;gap:1rem">
+                <div class="flex-between"><span style="font-size:0.875rem">SMS Notifications</span><label class="toggle-switch"><input type="checkbox" checked><div class="toggle-slider"></div></label></div>
+                <div class="flex-between"><span style="font-size:0.875rem">Email Alerts</span><label class="toggle-switch"><input type="checkbox" checked><div class="toggle-slider"></div></label></div>
+                <div class="flex-between"><span style="font-size:0.875rem">Dashboard Pop-ups</span><label class="toggle-switch"><input type="checkbox" checked><div class="toggle-slider"></div></label></div>
+                <div class="flex-between"><span style="font-size:0.875rem">AI Auto-Response</span><label class="toggle-switch"><input type="checkbox"><div class="toggle-slider"></div></label></div>
+                <div class="flex-between"><span style="font-size:0.875rem">PA System Integration</span><label class="toggle-switch"><input type="checkbox"><div class="toggle-slider"></div></label></div>
+              </div>
+            </div>
+          </div>
+          <button class="btn-primary" style="margin-top:1.5rem">Save Configuration</button>
+        </div>
+
+        <!-- Announce -->
+        <div id="admin-announce" style="display:none">
+          <div class="heading mb-lg" style="font-size:1.1rem">Emergency Broadcast</div>
+          <div class="form-group">
+            <label class="form-label">Target Zones</label>
+            <select class="form-input form-select">
+              <option>All Campus</option>
+              <option>Food Court Area</option>
+              <option>Academic Blocks</option>
+              <option>Hostel Block</option>
+              <option>Sports Area</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Priority Level</label>
+            <div class="flex gap-sm">
+              <button class="btn-ghost" style="flex:1;padding:0.5rem;font-size:0.8rem;border-color:rgba(0,255,136,0.3);color:var(--green)">Normal</button>
+              <button class="btn-ghost" style="flex:1;padding:0.5rem;font-size:0.8rem;border-color:rgba(255,215,0,0.3);color:var(--yellow)">Advisory</button>
+              <button class="btn-ghost" style="flex:1;padding:0.5rem;font-size:0.8rem;border-color:rgba(255,51,85,0.3);color:var(--red)">Emergency</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message</label>
+            <textarea class="form-input" rows="4" placeholder="Enter announcement message...">Attention: Food Court area is at maximum capacity. Please use Gallery Area or MBA Block cafeteria as alternatives. Thank you for your cooperation.</textarea>
+          </div>
+          <button class="btn-primary" style="background:var(--red)">📢 Broadcast Now</button>
+        </div>
+
+        <!-- Events -->
+        <div id="admin-events" style="display:none">
+          <div class="flex-between mb-lg">
+            <span class="heading" style="font-size:1.1rem">Event Scheduling</span>
+            <button class="btn-primary" style="padding:0.5rem 1rem;font-size:0.8rem">+ New Event</button>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.75rem">
+            <div class="a-card flex-between">
+              <div><div style="font-weight:600;margin-bottom:4px">Cultural Fest — Ground</div><div style="font-size:0.78rem;color:var(--text2)">Tomorrow · 9:00 AM – 6:00 PM · 2000+ attendees expected</div></div>
+              <span class="risk-badge risk-high">High Impact</span>
+            </div>
+            <div class="a-card flex-between">
+              <div><div style="font-weight:600;margin-bottom:4px">Technical Seminar — Auditorium</div><div style="font-size:0.78rem;color:var(--text2)">Thu May 12 · 10:00 AM – 1:00 PM · 400 attendees</div></div>
+              <span class="risk-badge risk-moderate">Moderate</span>
+            </div>
+            <div class="a-card flex-between">
+              <div><div style="font-weight:600;margin-bottom:4px">Exam Week</div><div style="font-size:0.78rem;color:var(--text2)">May 15–22 · All Academic Blocks · All students</div></div>
+              <span class="risk-badge risk-high">High Impact</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reports -->
+        <div id="admin-reports" style="display:none">
+          <div class="heading mb-lg" style="font-size:1.1rem">Report Generation</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.75rem">
+            <button class="feature-card" style="text-align:left;cursor:pointer;border:1px solid var(--border)">
+              <div class="feature-icon cyan" style="width:36px;height:36px;font-size:1rem;margin-bottom:0.75rem">📊</div>
+              <h3 style="font-size:0.9rem">Daily Summary</h3>
+              <p style="font-size:0.78rem">Crowd & waste trends for today</p>
+            </button>
+            <button class="feature-card" style="text-align:left;cursor:pointer;border:1px solid var(--border)">
+              <div class="feature-icon blue" style="width:36px;height:36px;font-size:1rem;margin-bottom:0.75rem">📈</div>
+              <h3 style="font-size:0.9rem">Weekly Analytics</h3>
+              <p style="font-size:0.78rem">7-day performance report</p>
+            </button>
+            <button class="feature-card" style="text-align:left;cursor:pointer;border:1px solid var(--border)">
+              <div class="feature-icon orange" style="width:36px;height:36px;font-size:1rem;margin-bottom:0.75rem">🚨</div>
+              <h3 style="font-size:0.9rem">Incident Report</h3>
+              <p style="font-size:0.78rem">All alerts and resolutions</p>
+            </button>
+            <button class="feature-card" style="text-align:left;cursor:pointer;border:1px solid var(--border)">
+              <div class="feature-icon green" style="width:36px;height:36px;font-size:1rem;margin-bottom:0.75rem">🧠</div>
+              <h3 style="font-size:0.9rem">AI Accuracy Report</h3>
+              <p style="font-size:0.78rem">Prediction performance metrics</p>
+            </button>
+          </div>
+        </div>
+
+        <!-- AI Settings -->
+        <div id="admin-ai" style="display:none">
+          <div class="heading mb-lg" style="font-size:1.1rem">AI Engine Configuration</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+            <div>
+              <div class="form-group">
+                <label class="form-label">Prediction Model</label>
+                <select class="form-input form-select">
+                  <option selected>EcoVision v2.1 (Production)</option>
+                  <option>EcoVision v2.2 (Beta)</option>
+                  <option>Legacy v1.8</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Forecast Horizon</label>
+                <select class="form-input form-select">
+                  <option>30 minutes</option>
+                  <option selected>60 minutes</option>
+                  <option>2 hours</option>
+                  <option>4 hours</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Update Frequency</label>
+                <select class="form-input form-select">
+                  <option>Every 30 seconds</option>
+                  <option selected>Every 1 minute</option>
+                  <option>Every 5 minutes</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:1rem">
+              <div class="flex-between"><span style="font-size:0.875rem">Anomaly Detection</span><label class="toggle-switch"><input type="checkbox" checked><div class="toggle-slider"></div></label></div>
+              <div class="flex-between"><span style="font-size:0.875rem">Auto-Route Suggestions</span><label class="toggle-switch"><input type="checkbox" checked><div class="toggle-slider"></div></label></div>
+              <div class="flex-between"><span style="font-size:0.875rem">Event Impact Learning</span><label class="toggle-switch"><input type="checkbox" checked><div class="toggle-slider"></div></label></div>
+              <div class="flex-between"><span style="font-size:0.875rem">Weekend Mode Adjustment</span><label class="toggle-switch"><input type="checkbox"><div class="toggle-slider"></div></label></div>
+              <div class="a-card mt-md">
+                <div class="title">Model Status</div>
+                <div class="value" style="font-size:1.4rem">94.2%</div>
+                <div class="sub">Accuracy · 28 predictions today</div>
+              </div>
+            </div>
+          </div>
+          <button class="btn-primary" style="margin-top:1.5rem">Save AI Settings</button>
+        </div>
+
+        <!-- Emergency Mode -->
+        <div id="admin-emergency" style="display:none">
+          <div class="heading mb-md" style="font-size:1.1rem;color:var(--red)">🚨 Emergency Controls</div>
+          <div style="background:rgba(255,51,85,0.06);border:1px solid rgba(255,51,85,0.2);border-radius:14px;padding:1.25rem;margin-bottom:1.5rem">
+            <p style="font-size:0.875rem;color:var(--text2)">Emergency mode enables full lockdown capabilities. Use only in genuine emergencies. All actions are logged and require admin confirmation.</p>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <button class="btn-ghost" style="padding:1rem;border-color:rgba(255,51,85,0.3);color:var(--red);font-size:0.875rem" onclick="alert('Emergency Lockdown would be triggered in production')">🔒 Campus Lockdown</button>
+            <button class="btn-ghost" style="padding:1rem;border-color:rgba(255,140,0,0.3);color:var(--orange);font-size:0.875rem">🚪 Initiate Evacuation</button>
+            <button class="btn-ghost" style="padding:1rem;border-color:rgba(0,212,255,0.3);color:var(--cyan);font-size:0.875rem">📡 All-PA Broadcast</button>
+            <button class="btn-ghost" style="padding:1rem;border-color:rgba(0,255,136,0.3);color:var(--green);font-size:0.875rem">✅ All Clear Signal</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════
+const pages = ['landing','livemap','analytics','alerts','ai','admin'];
+function showPage(id) {
+  pages.forEach(p => {
+    const el = document.getElementById('page-'+p);
+    const btn = document.querySelector(`.nav-link[onclick*="${p}"]`);
+    if(el) el.classList.toggle('active', p===id);
+    if(btn) btn.classList.toggle('active', p===id);
+  });
+  window.scrollTo(0,0);
+  if(id === 'livemap') initLiveMap();
+  if(id === 'analytics') initAnalytics();
+  if(id === 'ai') initAICharts();
+}
+
+// ═══════════════════════════════════════════════════════
+// CAMPUS DATA
+// ═══════════════════════════════════════════════════════
+const buildings = [
+  {id:'foodcourt', name:'Food Court', risk:'overflow', occ:94, waste:88, rec:'Immediate waste collection. Restrict entry via AI routing.'},
+  {id:'auditorium', name:'Auditorium', risk:'high', occ:78, waste:55, rec:'Monitor crowd exit flow. Prepare east entrance opening.'},
+  {id:'library', name:'Library', risk:'moderate', occ:71, waste:58, rec:'Schedule bin collection before 2 PM peak.'},
+  {id:'mbablock', name:'MBA Block', risk:'moderate', occ:65, waste:62, rec:'Waste bins at 62%. Alert collection team.'},
+  {id:'mechanical', name:'Mechanical Block', risk:'low', occ:45, waste:30, rec:'Normal operation. No action required.'},
+  {id:'csblock', name:'CS Block', risk:'low', occ:42, waste:28, rec:'Normal operation. Stable.'},
+  {id:'itblock', name:'IT Block', risk:'low', occ:38, waste:25, rec:'Low activity. Consider bin redistribution.'},
+  {id:'aimlblock', name:'AIML Block', risk:'low', occ:50, waste:35, rec:'Normal operation.'},
+  {id:'ground', name:'Ground (Events)', risk:'moderate', occ:68, waste:70, rec:'Event setup detected. Pre-position waste units.'},
+  {id:'gallery', name:'Gallery Area', risk:'low', occ:35, waste:20, rec:'Low density. Normal.'},
+  {id:'adminblock', name:'Admin Block', risk:'low', occ:30, waste:15, rec:'Normal operation.'},
+  {id:'hostels', name:'Hostels', risk:'low', occ:40, waste:32, rec:'Evening collection schedule active.'},
+];
+
+const riskColors = {overflow:'#ff3355', high:'#ff8c00', moderate:'#ffd700', low:'#00ff88'};
+const riskLabels = {overflow:'OVERFLOW', high:'HIGH RISK', moderate:'MODERATE', low:'LOW RISK'};
+
+// ═══════════════════════════════════════════════════════
+// LANDING PREVIEW MAP (Canvas)
+// ═══════════════════════════════════════════════════════
+function drawPreviewMap() {
+  const canvas = document.getElementById('previewMapCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  // Dark bg with grid
+  ctx.fillStyle = '#06101e';
+  ctx.fillRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(0,212,255,0.06)';
+  ctx.lineWidth = 1;
+  for(let x=0;x<W;x+=30){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}
+  for(let y=0;y<H;y+=30){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+
+  // Draw building zones
+  const zones = [
+    {x:80,y:40,w:100,h:60,label:'FOOD COURT',color:'#ff3355',risk:0.94},
+    {x:200,y:30,w:120,h:70,label:'AUDITORIUM',color:'#ff8c00',risk:0.78},
+    {x:350,y:40,w:80,h:55,label:'LIBRARY',color:'#ffd700',risk:0.71},
+    {x:60,y:130,w:90,h:60,label:'MBA BLOCK',color:'#ffd700',risk:0.65},
+    {x:170,y:140,w:70,h:50,label:'CS BLOCK',color:'#00ff88',risk:0.42},
+    {x:260,y:140,w:70,h:50,label:'IT BLOCK',color:'#00ff88',risk:0.38},
+    {x:350,y:130,w:120,h:60,label:'MECHANICAL',color:'#00ff88',risk:0.45},
+    {x:100,y:230,w:80,h:55,label:'GROUND',color:'#ffd700',risk:0.68},
+    {x:200,y:240,w:90,h:50,label:'GALLERY',color:'#00ff88',risk:0.35},
+    {x:340,y:240,w:80,h:50,label:'ADMIN',color:'#00ff88',risk:0.30},
+    {x:440,y:100,w:70,h:120,label:'HOSTEL',color:'#00ff88',risk:0.40},
+  ];
+
+  zones.forEach(z => {
+    // Glow
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = z.color;
+    ctx.strokeStyle = z.color;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(z.x,z.y,z.w,z.h);
+    ctx.shadowBlur = 0;
+
+    // Fill
+    ctx.fillStyle = z.color + '18';
+    ctx.fillRect(z.x,z.y,z.w,z.h);
+
+    // Label
+    ctx.fillStyle = '#ffffff88';
+    ctx.font = '8px JetBrains Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(z.label, z.x+z.w/2, z.y+z.h/2+3);
+
+    // Risk indicator
+    ctx.beginPath();
+    ctx.arc(z.x+z.w-8, z.y+8, 5, 0, Math.PI*2);
+    ctx.fillStyle = z.color;
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = z.color;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  });
+
+  // Animated dots (paths/roads)
+  ctx.strokeStyle = 'rgba(0,212,255,0.15)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([4,4]);
+  ctx.beginPath(); ctx.moveTo(0,120); ctx.lineTo(W,120); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0,220); ctx.lineTo(W,220); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(155,0); ctx.lineTo(155,H); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(340,0); ctx.lineTo(340,H); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // RNSIT label
+  ctx.fillStyle = 'rgba(0,212,255,0.7)';
+  ctx.font = 'bold 10px Syne, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('RNSIT · LIVE MAP', 10, 15);
+}
+
+// ═══════════════════════════════════════════════════════
+// LIVE MAP (Canvas-based campus map)
+// ═══════════════════════════════════════════════════════
+let mapScale = 1, mapOffX = 0, mapOffY = 0;
+let mapImg = new Image();
+let mapLoaded = false;
+
+// Map building hotspot regions (percentage-based for responsive)
+const mapBuildings = [
+  {id:'ground', name:'Ground (Fest & Events)', risk:'moderate', occ:68, waste:70, x:0.55, y:0.12, w:0.28, h:0.14},
+  {id:'firstgrade', name:'First Grade College', risk:'low', occ:35, waste:22, x:0.2, y:0.22, w:0.14, h:0.14},
+  {id:'auditorium', name:'Auditorium', risk:'high', occ:78, waste:55, x:0.35, y:0.2, w:0.14, h:0.14},
+  {id:'architecture', name:'Architecture Block', risk:'low', occ:40, waste:28, x:0.68, y:0.22, w:0.14, h:0.12},
+  {id:'mbablock', name:'MBA Block', risk:'moderate', occ:65, waste:62, x:0.2, y:0.38, w:0.12, h:0.12},
+  {id:'library', name:'Library', risk:'moderate', occ:71, waste:58, x:0.35, y:0.37, w:0.12, h:0.12},
+  {id:'foodcourt', name:'Food Court', risk:'overflow', occ:94, waste:88, x:0.5, y:0.37, w:0.12, h:0.12},
+  {id:'rnsintl', name:'RNS International School', risk:'low', occ:32, waste:20, x:0.65, y:0.37, w:0.14, h:0.12},
+  {id:'boyshos', name:"Boys' Hostel", risk:'low', occ:45, waste:35, x:0.83, y:0.32, w:0.1, h:0.18},
+  {id:'mechanical', name:'Mechanical Block', risk:'low', occ:45, waste:30, x:0.18, y:0.53, w:0.12, h:0.12},
+  {id:'cyblock', name:'CY Block', risk:'low', occ:38, waste:25, x:0.33, y:0.53, w:0.08, h:0.1},
+  {id:'aimlblock', name:'AIML Block', risk:'low', occ:50, waste:35, x:0.42, y:0.53, w:0.08, h:0.1},
+  {id:'civilblock', name:'Civil Block', risk:'low', occ:44, waste:28, x:0.51, y:0.53, w:0.08, h:0.1},
+  {id:'csblock', name:'CS Block', risk:'low', occ:42, waste:28, x:0.62, y:0.53, w:0.09, h:0.1},
+  {id:'itblock', name:'IT Block', risk:'low', occ:38, waste:25, x:0.72, y:0.53, w:0.09, h:0.1},
+  {id:'girlshos', name:"Girls' Hostel", risk:'low', occ:42, waste:30, x:0.83, y:0.53, w:0.1, h:0.14},
+  {id:'basketball', name:'Basketball Court', risk:'overflow', occ:85, waste:40, x:0.18, y:0.67, w:0.1, h:0.1},
+  {id:'gallery', name:'Gallery Area', risk:'low', occ:35, waste:20, x:0.38, y:0.66, w:0.18, h:0.16},
+  {id:'eceblock', name:'ECE Block', risk:'low', occ:48, waste:32, x:0.62, y:0.67, w:0.12, h:0.1},
+  {id:'adminblock', name:'Admin Block', risk:'low', occ:30, waste:15, x:0.4, y:0.77, w:0.14, h:0.1},
+  {id:'teachers', name:"Teachers' Center", risk:'low', occ:28, waste:12, x:0.57, y:0.79, w:0.1, h:0.1},
+  {id:'studentact', name:'Student Activity Area', risk:'low', occ:25, waste:18, x:0.18, y:0.78, w:0.1, h:0.1},
+];
+
+function initLiveMap() {
+  const canvas = document.getElementById('livemapCanvas');
+  if(!canvas) return;
+  const container = document.getElementById('map-main');
+  canvas.width = container.offsetWidth;
+  canvas.height = container.offsetHeight;
+
+  // Build sidebar
+  const list = document.getElementById('building-list');
+  list.innerHTML = '';
+  buildings.forEach(b => {
+    const div = document.createElement('div');
+    div.className = 'building-item';
+    div.id = 'bitem-'+b.id;
+    div.onclick = () => selectBuilding(b);
+    div.innerHTML = `<div style="flex:1">
+      <div style="font-size:0.8rem;font-weight:600;margin-bottom:4px">${b.name}</div>
+      <div class="occ-bar"><div class="occ-fill" style="width:${b.occ}%;background:${riskColors[b.risk]}"></div></div>
+    </div>
+    <span style="font-size:0.72rem;font-family:var(--font-mono);color:${riskColors[b.risk]};margin-left:8px">${b.occ}%</span>`;
+    list.appendChild(div);
+  });
+
+  mapImg.src = '/mnt/user-data/uploads/1778232101368_image.png';
+  mapImg.onload = () => { mapLoaded = true; drawLiveMap(); };
+  mapImg.onerror = () => { mapLoaded = false; drawLiveMap(); };
+  drawLiveMap();
+
+  canvas.addEventListener('click', handleMapClick);
+  canvas.addEventListener('mousemove', handleMapHover);
+  requestAnimationFrame(animateMap);
+}
+
+let mapAnimFrame = 0;
+function animateMap() {
+  mapAnimFrame++;
+  if(document.getElementById('page-livemap').classList.contains('active')) {
+    drawLiveMap();
+    requestAnimationFrame(animateMap);
+  }
+}
+
+function drawLiveMap() {
+  const canvas = document.getElementById('livemapCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  ctx.save();
+  ctx.clearRect(0,0,W,H);
+
+  // Draw map image or fallback
+  if(mapLoaded) {
+    ctx.drawImage(mapImg, 0, 0, W, H);
+    // Overlay darken
+    ctx.fillStyle = 'rgba(3,7,15,0.25)';
+    ctx.fillRect(0,0,W,H);
+  } else {
+    // Fallback grid map
+    ctx.fillStyle = '#060e1e';
+    ctx.fillRect(0,0,W,H);
+
+    // Grid lines
+    ctx.strokeStyle = 'rgba(0,212,255,0.05)';
+    ctx.lineWidth = 1;
+    for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}
+    for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+
+    // Roads
+    ctx.strokeStyle = 'rgba(0,212,255,0.12)';
+    ctx.lineWidth = 3;
+    const roads = [0.25,0.5,0.75];
+    roads.forEach(r => {
+      ctx.beginPath(); ctx.moveTo(0,r*H); ctx.lineTo(W,r*H); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(r*W,0); ctx.lineTo(r*W,H); ctx.stroke();
+    });
+  }
+
+  // Draw building overlays
+  mapBuildings.forEach(b => {
+    const bx = b.x * W, by = b.y * H, bw = b.w * W, bh = b.h * H;
+    const col = riskColors[b.risk];
+    const pulse = 0.5 + 0.5 * Math.sin(mapAnimFrame * 0.05 + b.x * 10);
+
+    // Building glow fill
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = col;
+    ctx.strokeStyle = col;
+    ctx.lineWidth = b.risk === 'overflow' ? 2.5 : 1.5;
+
+    // Pulsing border for overflow
+    if(b.risk === 'overflow') {
+      ctx.globalAlpha = 0.7 + 0.3 * pulse;
+    } else {
+      ctx.globalAlpha = 0.8;
+    }
+
+    ctx.strokeRect(bx, by, bw, bh);
+    ctx.fillStyle = col + '22';
+    ctx.fillRect(bx, by, bw, bh);
+    ctx.globalAlpha = 1;
+    ctx.shadowBlur = 0;
+
+    // Risk dot
+    const dotX = bx + bw - 10, dotY = by + 10;
+    const dotR = b.risk === 'overflow' ? (4 + 2*pulse) : 4;
+    ctx.beginPath();
+    ctx.arc(dotX, dotY, dotR, 0, Math.PI*2);
+    ctx.fillStyle = col;
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = col;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Label
+    if(bw > 60 && bh > 40) {
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `bold ${Math.min(10, bw/8)}px 'JetBrains Mono', monospace`;
+      ctx.textAlign = 'center';
+      ctx.globalAlpha = 0.9;
+      const words = b.name.split(' ');
+      if(words.length > 2 && bh > 60) {
+        ctx.fillText(words.slice(0,2).join(' '), bx+bw/2, by+bh/2-5);
+        ctx.fillText(words.slice(2).join(' '), bx+bw/2, by+bh/2+8);
+      } else {
+        ctx.fillText(b.name.length > 16 ? b.name.substring(0,14)+'…' : b.name, bx+bw/2, by+bh/2+3);
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    // Occupancy bar
+    const barY = by + bh - 6;
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillRect(bx+2, barY, bw-4, 4);
+    ctx.fillStyle = col;
+    ctx.fillRect(bx+2, barY, (bw-4)*b.occ/100, 4);
+  });
+
+  // Moving activity dots
+  const t = mapAnimFrame * 0.01;
+  for(let i=0;i<12;i++) {
+    const angle = t*0.7 + i*(Math.PI*2/12);
+    const radius = 80 + i*20;
+    const cx = W/2 + Math.cos(angle)*radius*0.8;
+    const cy = H/2 + Math.sin(angle)*radius*0.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 2, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(0,212,255,${0.3+0.3*Math.sin(t+i)})`;
+    ctx.fill();
+  }
+
+  // Compass
+  ctx.fillStyle = 'rgba(0,212,255,0.7)';
+  ctx.font = '11px JetBrains Mono';
+  ctx.textAlign = 'center';
+  ctx.fillText('N', W-20, 25);
+  ctx.strokeStyle = 'rgba(0,212,255,0.5)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(W-20,30); ctx.lineTo(W-20,45); ctx.stroke();
+  ctx.restore();
+}
+
+function handleMapClick(e) {
+  const canvas = document.getElementById('livemapCanvas');
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) / rect.width;
+  const my = (e.clientY - rect.top) / rect.height;
+
+  let clicked = null;
+  mapBuildings.forEach(b => {
+    if(mx >= b.x && mx <= b.x+b.w && my >= b.y && my <= b.y+b.h) clicked = b;
+  });
+
+  if(clicked) {
+    const bd = buildings.find(b => b.id === clicked.id) || {
+      name: clicked.name, risk: clicked.risk, occ: clicked.occ, waste: clicked.waste,
+      rec: 'Monitor this zone for activity changes.'
+    };
+    showBuildingPopup(bd, e.clientX, e.clientY);
+  } else {
+    closePopup();
+  }
+}
+
+function handleMapHover(e) {
+  const canvas = document.getElementById('livemapCanvas');
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) / rect.width;
+  const my = (e.clientY - rect.top) / rect.height;
+  let onBuilding = mapBuildings.some(b => mx >= b.x && mx <= b.x+b.w && my >= b.y && my <= b.y+b.h);
+  canvas.style.cursor = onBuilding ? 'pointer' : 'crosshair';
+}
+
+function showBuildingPopup(b, cx, cy) {
+  const popup = document.getElementById('buildingPopup');
+  document.getElementById('popup-name').textContent = b.name;
+  document.getElementById('popup-occ').textContent = b.occ+'%';
+  document.getElementById('popup-waste').textContent = b.waste+'%';
+  document.getElementById('popup-rec').textContent = b.rec;
+  const riskEl = document.getElementById('popup-risk');
+  riskEl.textContent = '● '+riskLabels[b.risk];
+  riskEl.className = 'risk-badge risk-'+b.risk+' mb-sm';
+  popup.classList.add('visible');
+  popup.style.left = Math.min(cx-260, window.innerWidth-270)+'px';
+  popup.style.top = Math.min(cy-20, window.innerHeight-200)+'px';
+}
+
+function closePopup() {
+  document.getElementById('buildingPopup').classList.remove('visible');
+}
+
+function selectBuilding(b) {
+  document.querySelectorAll('.building-item').forEach(el => el.classList.remove('selected'));
+  document.getElementById('bitem-'+b.id)?.classList.add('selected');
+  showBuildingPopup(b, 500, 300);
+}
+
+function mapZoom(f) { mapScale = Math.max(0.5, Math.min(3, mapScale*f)); }
+function resetMapView() { mapScale = 1; mapOffX = 0; mapOffY = 0; }
+
+// ═══════════════════════════════════════════════════════
+// CHARTS — Analytics
+// ═══════════════════════════════════════════════════════
+function initAnalytics() {
+  drawCrowdTrend();
+  drawWasteZone();
+  drawBuildingBars();
+  drawWeeklyChart();
+  drawLandingChart();
+}
+
+function drawLine(ctx, data, W, H, pad, color, dashed) {
+  if(dashed) ctx.setLineDash([5,4]);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  const stepX = (W-pad*2)/(data.length-1);
+  data.forEach((v, i) => {
+    const x = pad + i*stepX;
+    const y = H-pad - (v/100)*(H-pad*2);
+    i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Area fill
+  ctx.beginPath();
+  data.forEach((v, i) => {
+    const x = pad + i*stepX;
+    const y = H-pad - (v/100)*(H-pad*2);
+    i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  });
+  ctx.lineTo(pad+(data.length-1)*stepX, H-pad);
+  ctx.lineTo(pad, H-pad);
+  ctx.closePath();
+  const grad = ctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0, color+'44');
+  grad.addColorStop(1, color+'00');
+  ctx.fillStyle = grad;
+  ctx.fill();
+}
+
+function drawCrowdTrend() {
+  const canvas = document.getElementById('crowdTrendChart');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width = canvas.offsetWidth;
+  const H = 180;
+  canvas.height = H;
+  const pad = 20;
+  ctx.clearRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+  ctx.lineWidth = 1;
+  for(let i=0;i<5;i++){
+    const y = pad + i*(H-pad*2)/4;
+    ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(W-pad,y); ctx.stroke();
+  }
+
+  const actual = [45,55,70,82,90,88,85,78,72,65,55];
+  const predicted = [43,57,72,84,92,86,83,80,74,67,57];
+  const threshold = Array(11).fill(85);
+
+  drawLine(ctx, threshold, W, H, pad, '#ff3355', true);
+  drawLine(ctx, predicted, W, H, pad, '#1a6bff', true);
+  drawLine(ctx, actual, W, H, pad, '#00d4ff', false);
+
+  // Dots on actual
+  const stepX = (W-pad*2)/(actual.length-1);
+  actual.forEach((v,i) => {
+    const x = pad+i*stepX;
+    const y = H-pad-(v/100)*(H-pad*2);
+    ctx.beginPath();
+    ctx.arc(x,y,3,0,Math.PI*2);
+    ctx.fillStyle = '#00d4ff';
+    ctx.fill();
+  });
+}
+
+function drawWasteZone() {
+  const canvas = document.getElementById('wasteZoneChart');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width = canvas.offsetWidth;
+  const H = 180;
+  canvas.height = H;
+  ctx.clearRect(0,0,W,H);
+
+  const zones = [
+    {name:'Food Court',v:88,color:'#ff3355'},
+    {name:'Auditorium',v:55,color:'#ff8c00'},
+    {name:'Library',v:58,color:'#ffd700'},
+    {name:'MBA Block',v:62,color:'#ffd700'},
+    {name:'CS/IT Block',v:28,color:'#00ff88'},
+    {name:'Others',v:25,color:'#00d4ff'},
+  ];
+
+  const pad = 15;
+  const bw = (W - pad*2) / zones.length - 6;
+  const maxH = H - pad*3;
+
+  zones.forEach((z,i) => {
+    const x = pad + i*(bw+6);
+    const bh = (z.v/100)*maxH;
+    const y = H - pad - bh;
+
+    // Glow
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = z.color;
+    const grad = ctx.createLinearGradient(0,y,0,H-pad);
+    grad.addColorStop(0, z.color+'cc');
+    grad.addColorStop(1, z.color+'33');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.roundRect(x,y,bw,bh,3);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Label
+    ctx.fillStyle = z.color;
+    ctx.font = '9px JetBrains Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText(z.v+'%', x+bw/2, y-4);
+
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.font = '8px DM Sans';
+    const wds = z.name.split(' ');
+    ctx.fillText(wds[0], x+bw/2, H-4);
+  });
+}
+
+function drawBuildingBars() {
+  const container = document.getElementById('buildingBars');
+  if(!container) return;
+  const data = [
+    {name:'Food Court',occ:94,color:'#ff3355'},
+    {name:'Auditorium',occ:78,color:'#ff8c00'},
+    {name:'Library',occ:71,color:'#ffd700'},
+    {name:'MBA Block',occ:65,color:'#ffd700'},
+    {name:'Ground',occ:68,color:'#ffd700'},
+    {name:'AIML Block',occ:50,color:'#00d4ff'},
+    {name:'CS Block',occ:42,color:'#00ff88'},
+    {name:'IT Block',occ:38,color:'#00ff88'},
+    {name:'Admin Block',occ:30,color:'#00ff88'},
+  ];
+
+  container.innerHTML = data.map(d => `
+    <div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:0.78rem">
+        <span>${d.name}</span>
+        <span style="font-family:var(--font-mono);color:${d.color}">${d.occ}%</span>
+      </div>
+      <div style="height:6px;background:rgba(255,255,255,0.06);border-radius:3px">
+        <div style="height:100%;width:${d.occ}%;background:${d.color};border-radius:3px;box-shadow:0 0 8px ${d.color}55;transition:width 1s ease"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function drawWeeklyChart() {
+  const canvas = document.getElementById('weeklyChart');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width = canvas.offsetWidth;
+  const H = 180;
+  canvas.height = H;
+  const pad = 15;
+  ctx.clearRect(0,0,W,H);
+
+  const days = [72,68,85,91,88,55];
+  const waste = [60,55,78,88,82,40];
+
+  const bw = (W-pad*2)/days.length - 6;
+  const maxH = H - pad*2;
+
+  days.forEach((v,i) => {
+    const x = pad + i*(bw+6);
+    const bh = (v/100)*maxH;
+    const by = H - pad - bh;
+    ctx.fillStyle = '#1a6bff55';
+    ctx.beginPath(); ctx.roundRect(x, by, bw/2, bh, 3); ctx.fill();
+    ctx.fillStyle = '#1a6bff';
+    ctx.font = '9px JetBrains Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText(v+'%', x+bw/4, by-3);
+
+    const wh = (waste[i]/100)*maxH;
+    const wy = H - pad - wh;
+    ctx.fillStyle = '#ffd70055';
+    ctx.beginPath(); ctx.roundRect(x+bw/2, wy, bw/2, wh, 3); ctx.fill();
+  });
+}
+
+function drawLandingChart() {
+  const canvas = document.getElementById('landingChart');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 400, H = 200;
+  canvas.width = W; canvas.height = H;
+  const pad = 20;
+  ctx.clearRect(0,0,W,H);
+
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+  ctx.lineWidth = 1;
+  for(let i=1;i<4;i++){
+    const y = pad + i*(H-pad*2)/3;
+    ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(W-pad,y); ctx.stroke();
+  }
+
+  const actual = [30,40,60,75,88,90,85,82,70,60,50,40];
+  const predicted = [28,42,62,77,90,88,83,80,72,62,52,42];
+  const threshold = Array(12).fill(82);
+
+  drawLine(ctx, threshold, W, H, pad, '#ff3355', true);
+  drawLine(ctx, predicted, W, H, pad, '#1a6bff', true);
+  drawLine(ctx, actual, W, H, pad, '#00d4ff', false);
+}
+
+// ═══════════════════════════════════════════════════════
+// AI PAGE CHARTS
+// ═══════════════════════════════════════════════════════
+function initAICharts() {
+  drawPredictionChart();
+  drawZoneRiskList();
+}
+
+function drawPredictionChart() {
+  const canvas = document.getElementById('predictionChart');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width = canvas.offsetWidth;
+  const H = 200;
+  canvas.height = H;
+  const pad = 20;
+  ctx.clearRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+  ctx.lineWidth = 1;
+  for(let i=0;i<5;i++){
+    const y = pad + i*(H-pad*2)/4;
+    ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(W-pad,y); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.font = '9px JetBrains Mono';
+    ctx.textAlign = 'right';
+    ctx.fillText((100-i*25)+'%', pad-4, y+3);
+  }
+
+  const now = [90, 92, 95, 98, 97, 94, 90];
+  const lower = [85, 87, 90, 92, 88, 85, 82];
+  const threshold = Array(7).fill(90);
+
+  // Confidence band
+  const stepX = (W-pad*2)/6;
+  ctx.beginPath();
+  now.forEach((v,i)=>{
+    const x=pad+i*stepX; const y=H-pad-(v/100)*(H-pad*2);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  for(let i=lower.length-1;i>=0;i--){
+    const x=pad+i*stepX; const y=H-pad-(lower[i]/100)*(H-pad*2);
+    ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(26,107,255,0.12)';
+  ctx.fill();
+
+  drawLine(ctx, threshold, W, H, pad, '#ff3355', true);
+  drawLine(ctx, lower, W, H, pad, '#1a6bff33', false);
+  drawLine(ctx, now, W, H, pad, '#1a6bff', false);
+
+  // Now marker
+  ctx.beginPath(); ctx.arc(pad, H-pad-(now[0]/100)*(H-pad*2), 5, 0, Math.PI*2);
+  ctx.fillStyle = '#00d4ff'; ctx.fill();
+  ctx.fillStyle = '#00d4ff'; ctx.font = '10px JetBrains Mono'; ctx.textAlign = 'left';
+  ctx.fillText('NOW', pad+8, H-pad-(now[0]/100)*(H-pad*2)+4);
+}
+
+function drawZoneRiskList() {
+  const el = document.getElementById('zoneRiskList');
+  if(!el) return;
+  const zones = [
+    {name:'Food Court', curr:94, pred:97, color:'#ff3355'},
+    {name:'Auditorium', curr:78, pred:85, color:'#ff8c00'},
+    {name:'Library', curr:71, pred:74, color:'#ffd700'},
+    {name:'MBA Block', curr:65, pred:68, color:'#ffd700'},
+    {name:'CS/IT Block', curr:42, pred:40, color:'#00ff88'},
+    {name:'Gallery Area', curr:35, pred:38, color:'#00ff88'},
+  ];
+
+  el.innerHTML = zones.map(z => `
+    <div style="background:var(--bg3);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:0.75rem;margin-bottom:0.625rem">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:0.82rem">
+        <span style="font-weight:600">${z.name}</span>
+        <span style="font-family:var(--font-mono);color:${z.color}">${z.pred}% predicted</span>
+      </div>
+      <div style="height:5px;background:rgba(255,255,255,0.06);border-radius:3px">
+        <div style="height:100%;width:${z.pred}%;background:${z.color};border-radius:3px;box-shadow:0 0 8px ${z.color}44"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:0.68rem;color:var(--text3)">
+        <span>Current: ${z.curr}%</span>
+        <span>+60min: ${z.pred}%</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// SIMULATION
+// ═══════════════════════════════════════════════════════
+function updateSimAttendees(v) {
+  document.getElementById('simAttendeesVal').textContent = parseInt(v).toLocaleString()+' students';
+}
+
+function runSimulation() {
+  const event = document.getElementById('simEvent').value;
+  const attendees = parseInt(document.getElementById('simAttendees').value);
+  const duration = document.getElementById('simDuration').value;
+
+  const peak = Math.min(99, Math.round(attendees/3000*100 + 30));
+  const wasteRisk = peak > 85 ? 'CRITICAL' : peak > 70 ? 'HIGH' : peak > 55 ? 'MODERATE' : 'LOW';
+  const wasteColor = peak > 85 ? '#ff3355' : peak > 70 ? '#ff8c00' : peak > 55 ? '#ffd700' : '#00ff88';
+
+  document.getElementById('sim-peak').textContent = peak+'%';
+  document.getElementById('sim-peak').style.color = wasteColor;
+  document.getElementById('sim-waste').textContent = wasteRisk;
+  document.getElementById('sim-waste').style.color = wasteColor;
+
+  const recMap = {
+    'Cultural Fest (Ground)': `With ${attendees.toLocaleString()} attendees at Ground, expect crowd spillover to Gallery Area. Deploy ${Math.ceil(attendees/600)} waste units. Activate east campus parking for overflow.`,
+    'Sports Day (Basketball Court)': `Basketball Court event with ${attendees.toLocaleString()} attendees. Student activity area expected to overflow. Pre-position 2 waste collection units.`,
+    'Seminar (Auditorium)': `Auditorium seminar: ${attendees.toLocaleString()} attendees. Food Court will see 40% surge in lunch crowd. Alert waste team and caterers.`,
+    'Exam Week (All Blocks)': `Exam mode: all academic blocks to peak simultaneously. Distribute extra waste bins across CS, IT, Mechanical, MBA blocks. Increase collection frequency.`,
+    'Guest Lecture (MBA Block)': `MBA Block guest lecture. Expect 200-400 overflow attendees in corridor. Library access may be impacted. Pre-open adjacent seminar halls.`,
+  };
+
+  document.getElementById('sim-rec').textContent = recMap[event] || `${attendees.toLocaleString()} attendees expected. Monitor all zones and pre-position resources accordingly.`;
+}
+
+// ═══════════════════════════════════════════════════════
+// ADMIN TABS
+// ═══════════════════════════════════════════════════════
+function showAdminTab(tab) {
+  const tabs = ['users','sensors','alerts','announce','events','reports','ai','emergency'];
+  tabs.forEach(t => {
+    const el = document.getElementById('admin-'+t);
+    if(el) el.style.display = t === tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('.admin-nav-item').forEach((el,i) => {
+    el.classList.toggle('active', tabs[i] === tab);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// ALERT TIMER
+// ═══════════════════════════════════════════════════════
+function updateTimer() {
+  const el = document.getElementById('alertTimer');
+  if(el) {
+    const now = new Date();
+    el.textContent = `System time: ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+  }
+}
+setInterval(updateTimer, 1000);
+
+// ═══════════════════════════════════════════════════════
+// TOAST NOTIFICATIONS
+// ═══════════════════════════════════════════════════════
+function showToast(msg, type='info') {
+  const colors = {info:'var(--cyan)', warning:'var(--yellow)', error:'var(--red)', success:'var(--green)'};
+  const icons = {info:'ℹ', warning:'⚠', error:'🔴', success:'✅'};
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `<span>${icons[type]}</span><span style="color:${colors[type]}">${msg}</span>`;
+  toast.style.borderColor = colors[type]+'44';
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 4000);
+}
+
+function triggerBroadcast() {
+  showToast('Emergency broadcast sent to all campus zones!', 'error');
+}
+
+function showLockdown() {
+  showToast('Lockdown mode requires additional admin confirmation.', 'warning');
+}
+
+// ═══════════════════════════════════════════════════════
+// TAB BUTTONS (generic)
+// ═══════════════════════════════════════════════════════
+document.querySelectorAll('.tab-bar').forEach(bar => {
+  bar.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      bar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+});
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+window.addEventListener('load', () => {
+  drawPreviewMap();
+  drawLandingChart();
+  runSimulation();
+  showToast('EcoVision system online · RNSIT campus', 'success');
+
+  // Periodic mock data update
+  setInterval(() => {
+    if(document.getElementById('page-analytics').classList.contains('active')) {
+      drawCrowdTrend();
+    }
+  }, 5000);
+
+  // Simulate live alert
+  setTimeout(() => {
+    showToast('⚠ New alert: Food Court overflow threshold exceeded!', 'error');
+  }, 8000);
+});
+
+// Resize handler
+window.addEventListener('resize', () => {
+  if(document.getElementById('page-livemap').classList.contains('active')) {
+    const canvas = document.getElementById('livemapCanvas');
+    const container = document.getElementById('map-main');
+    if(canvas && container) {
+      canvas.width = container.offsetWidth;
+      canvas.height = container.offsetHeight;
+    }
+  }
+  if(document.getElementById('page-analytics').classList.contains('active')) {
+    initAnalytics();
+  }
+});
+/* ================================
+   BACKEND + FRONTEND CONNECTION
+================================ */
+
+async function loadBackendData() {
+  try {
+
+    // CALL BACKEND API
+    const response = await fetch("http://localhost:5000/api/live");
+
+    // CONVERT TO JSON
+    const result = await response.json();
+
+    console.log("Backend Connected:", result);
+
+    // GET ZONES ARRAY
+    const zones = result.zones;
+
+    // TARGET BUILDING LIST
+    const buildingList = document.getElementById("building-list");
+
+    // CLEAR OLD CONTENT
+    buildingList.innerHTML = "";
+
+    // LOOP THROUGH ZONES
+    zones.forEach(zone => {
+
+      // CREATE DIV
+      const buildingDiv = document.createElement("div");
+
+      buildingDiv.className = "building-item";
+
+      // RISK COLOR
+      let riskColor = "lime";
+
+      if (zone.risk.includes("Overflow")) {
+        riskColor = "red";
+      }
+      else if (zone.risk.includes("High")) {
+        riskColor = "orange";
+      }
+      else if (zone.risk.includes("Moderate")) {
+        riskColor = "yellow";
+      }
+
+      // HTML INSIDE BUILDING CARD
+      buildingDiv.innerHTML = `
+        <div style="width:100%">
+
+          <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:6px;
+          ">
+
+            <strong>${zone.name}</strong>
+
+            <span style="
+              color:${riskColor};
+              font-size:0.7rem;
+              font-weight:bold;
+            ">
+              ${zone.risk}
+            </span>
+
+          </div>
+
+          <div style="
+            font-size:0.72rem;
+            color:var(--text2);
+            margin-bottom:6px;
+          ">
+            Occupancy: ${zone.occupancy}% |
+            Waste: ${zone.wasteLevel}%
+          </div>
+
+          <div class="occ-bar">
+
+            <div
+              class="occ-fill"
+              style="
+                width:${zone.occupancy}%;
+                background:${riskColor};
+              ">
+            </div>
+
+          </div>
+
+        </div>
+      `;
+
+      // ADD TO SIDEBAR
+      buildingList.appendChild(buildingDiv);
+
+    });
+
+  }
+
+  catch (error) {
+
+    console.error("Backend Error:", error);
+
+  }
+}
+
+// LOAD FIRST TIME
+loadBackendData();
+
+// AUTO REFRESH EVERY 3 SECONDS
+setInterval(loadBackendData, 3000);
+// ===== WINNER-LEVEL MICRO INTERACTIONS =====
+
+// animated number counters
+function animateCounter(el, target, suffix = "") {
+  let start = 0;
+  const duration = 1200;
+  const stepTime = 16;
+  const steps = duration / stepTime;
+  const increment = target / steps;
+
+  const timer = setInterval(() => {
+    start += increment;
+    if (start >= target) {
+      el.textContent = target + suffix;
+      clearInterval(timer);
+    } else {
+      el.textContent = Math.floor(start) + suffix;
+    }
+  }, stepTime);
+}
+
+document.querySelectorAll(".a-card .value").forEach((el) => {
+  const text = el.textContent.trim();
+  const number = parseInt(text);
+  const suffix = text.replace(number, "");
+
+  if (!isNaN(number)) {
+    el.textContent = "0" + suffix;
+    setTimeout(() => animateCounter(el, number, suffix), 400);
+  }
+});
+
+// tilt effect for premium cards
+document.querySelectorAll(".feature-card, .ai-card, .a-card, .chart-area").forEach(card => {
+  card.addEventListener("mousemove", (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const rotateX = ((y / rect.height) - 0.5) * -5;
+    const rotateY = ((x / rect.width) - 0.5) * 5;
+
+    card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+  });
+
+  card.addEventListener("mouseleave", () => {
+    card.style.transform = "";
+  });
+});
+
+// live system status text
+const liveMessages = [
+  "System Live",
+  "AI Scanning",
+  "Sensors Active",
+  "Prediction Running",
+  "Campus Stable"
+];
+
+let liveIndex = 0;
+setInterval(() => {
+  const badge = document.querySelector(".nav-badge");
+  if (badge) {
+    badge.innerHTML = `<div class="nav-badge-dot"></div>${liveMessages[liveIndex]}`;
+    liveIndex = (liveIndex + 1) % liveMessages.length;
+  }
+}, 2200);
+
+// random live toast alerts
+const toastMessages = [
+  "AI detected rising activity near Food Court",
+  "Gallery Area risk updated to Overflow",
+  "Library occupancy crossed high threshold",
+  "Cleaning route optimized successfully",
+  "Ground event zone requires extra bins"
+];
+
+function showSmartToast(message) {
+  let container = document.querySelector(".toast-container");
+
+  if (!container) {
+    container = document.createElement("div");
+    container.className = "toast-container";
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.innerHTML = `<span style="color:var(--cyan)">●</span><span>${message}</span>`;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateX(20px)";
+    setTimeout(() => toast.remove(), 400);
+  }, 3200);
+}
+
+setInterval(() => {
+  const message = toastMessages[Math.floor(Math.random() * toastMessages.length)];
+  showSmartToast(message);
+}, 7000);
+
+// smoother reveal on scroll
+const revealItems = document.querySelectorAll(".feature-card, .glass-card, .a-card, .chart-area, .ai-card, .alert-card");
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = "1";
+      entry.target.style.transform = "translateY(0)";
+    }
+  });
+}, { threshold: 0.15 });
+
+revealItems.forEach(item => {
+  item.style.opacity = "0";
+  item.style.transform = "translateY(24px)";
+  item.style.transition = "0.7s ease";
+  revealObserver.observe(item);
+});
+
+const mapZones = [
+  { id: 1, name: "Food Court", x: 58, y: 30 },
+  { id: 2, name: "Library", x: 43, y: 28 },
+  { id: 3, name: "CS Block", x: 58, y: 48 }
+];
+
+function createMapClickZones() {
+  const mapMain = document.getElementById("map-main");
+
+  mapZones.forEach(zone => {
+    const btn = document.createElement("button");
+
+    btn.innerText = "";
+    btn.style.position = "absolute";
+    btn.style.left = zone.x + "%";
+    btn.style.top = zone.y + "%";
+    btn.style.width = "45px";
+    btn.style.height = "45px";
+    btn.style.borderRadius = "50%";
+    btn.style.border = "2px solid #00d4ff";
+    btn.style.background = "rgba(0, 212, 255, 0.15)";
+    btn.style.cursor = "pointer";
+    btn.style.zIndex = "25";
+    btn.title = zone.name;
+
+    btn.onclick = () => showBuildingDetails(zone.id, btn);
+
+    mapMain.appendChild(btn);
+  });
+}
+
+async function showBuildingDetails(id, btn) {
+  const res = await fetch("http://localhost:5000/api/live");
+  const data = await res.json();
+
+  const zone = data.zones.find(z => z.id === id);
+
+  document.getElementById("popup-name").innerText = zone.name;
+  document.getElementById("popup-occ").innerText = zone.occupancy + "%";
+  document.getElementById("popup-waste").innerText = zone.wasteLevel + "%";
+  document.getElementById("popup-risk").innerText = zone.risk;
+  document.getElementById("popup-rec").innerText =
+    zone.risk + " detected. Take action based on occupancy and waste level.";
+
+  const popup = document.getElementById("buildingPopup");
+  popup.classList.add("visible");
+
+  popup.style.left = btn.offsetLeft + 50 + "px";
+  popup.style.top = btn.offsetTop + "px";
+}
+
+function closePopup() {
+  document.getElementById("buildingPopup").classList.remove("visible");
+}
+
+createMapClickZones();
+
+
+</script>
+
+
+</body>
+</html>
