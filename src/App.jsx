@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Landing from './pages/Landing';
 import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
+import { Toaster } from 'sonner';
 
 function App() {
   const [session, setSession] = useState(null);
@@ -25,6 +26,7 @@ function App() {
 
   return (
     <Router>
+      <Toaster position="top-right" richColors />
       <Navbar session={session} />
       <Routes>
         <Route path="/" element={<Landing />} />

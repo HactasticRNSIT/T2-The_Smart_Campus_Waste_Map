@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Trash2, ArrowRight } from 'lucide-react';
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -41,115 +41,137 @@ const Auth = () => {
       toast.error(error.message || 'An error occurred during authentication');
     } else {
       toast.success(action === 'login' ? 'Logged in successfully!' : 'Registration successful!');
-      window.location.href = '/dashboard';
+      // window.location.href = '/dashboard'; // Let App.jsx handle navigation
     }
   };
 
   return (
-    <div className="min-h-screen w-full flex bg-zinc-50 dark:bg-zinc-950">
-      {/* Abstract Dark Image Side */}
-      <div className="hidden lg:flex w-1/2 relative overflow-hidden bg-zinc-900">
-        <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-black to-zinc-800 z-10 opacity-80" />
-        <img 
-          src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" 
-          alt="Abstract Dark Layout" 
-          className="absolute inset-0 w-full h-full object-cover opacity-60"
-        />
-        <div className="relative z-20 flex flex-col justify-center h-full p-16 text-white">
-          <h1 className="text-5xl font-bold tracking-tight mb-4">Smart Campus.</h1>
-          <p className="text-xl text-zinc-300 max-w-md leading-relaxed">
-            A unified platform for managing campus operations, reporting grievances, and tracking live waste levels.
+    <div className="min-h-screen w-full flex bg-[#0a0a0c] text-white overflow-hidden">
+      {/* Visual Side */}
+      <div className="hidden lg:flex w-1/2 relative flex-col justify-center p-20 overflow-hidden border-r border-white/5">
+        <div className="absolute top-[-20%] left-[-20%] w-[80%] h-[80%] bg-blue-600/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-20%] right-[-20%] w-[80%] h-[80%] bg-emerald-600/10 rounded-full blur-[120px]" />
+        
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-12">
+            <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-600/40">
+              <Trash2 className="text-white w-7 h-7" />
+            </div>
+            <span className="text-3xl font-bold tracking-tight">EcoSmart</span>
+          </div>
+          
+          <h1 className="text-6xl font-bold leading-tight mb-6 bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent">
+            Intelligence <br /> for a Cleaner <br /> Campus.
+          </h1>
+          
+          <p className="text-xl text-gray-400 max-w-md leading-relaxed mb-12">
+            The next generation of waste management starts here. Real-time monitoring, 
+            automated alerts, and data-driven insights.
           </p>
+
+          <div className="flex gap-4">
+             <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-medium">IoT Integrated</div>
+             <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-medium">AI Powered</div>
+             <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-medium">Open Source</div>
+          </div>
         </div>
       </div>
 
       {/* Form Side */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12">
-        <div className="w-full max-w-md space-y-8">
-          <div className="text-center lg:text-left mb-8">
-            <h2 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50 tracking-tight">Welcome back</h2>
-            <p className="text-zinc-500 dark:text-zinc-400 mt-2">Enter your credentials to access your account</p>
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+        <div className="w-full max-w-sm space-y-10 animate-in fade-in slide-in-from-right-4 duration-700">
+          <div className="space-y-2">
+            <h2 className="text-3xl font-bold tracking-tight">Get Started</h2>
+            <p className="text-gray-500">Sign in to your campus dashboard</p>
           </div>
 
           <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-8 h-12">
-              <TabsTrigger value="login" className="text-base">Login</TabsTrigger>
-              <TabsTrigger value="register" className="text-base">Register</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 p-1 bg-white/5 rounded-xl border border-white/10 h-12">
+              <TabsTrigger 
+                value="login" 
+                className="rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-all"
+              >
+                Sign In
+              </TabsTrigger>
+              <TabsTrigger 
+                value="register"
+                className="rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-all"
+              >
+                Register
+              </TabsTrigger>
             </TabsList>
             
-            <TabsContent value="login" className="space-y-6 mt-4">
+            <TabsContent value="login" className="space-y-6 mt-8">
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="login-email">Email</Label>
+                  <Label htmlFor="login-email" className="text-gray-400">Email Address</Label>
                   <Input 
                     id="login-email" 
                     type="email" 
-                    placeholder="m@example.com" 
+                    placeholder="name@rnsit.ac.in" 
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-12"
+                    className="h-12 bg-white/5 border-white/10 focus:border-blue-500/50 focus:ring-blue-500/20 rounded-xl"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="login-password">Password</Label>
+                  <div className="flex justify-between">
+                    <Label htmlFor="login-password" name="password" className="text-gray-400">Password</Label>
+                    <button className="text-xs text-blue-400 hover:underline">Forgot password?</button>
+                  </div>
                   <Input 
                     id="login-password" 
                     type="password" 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-12"
+                    className="h-12 bg-white/5 border-white/10 focus:border-blue-500/50 focus:ring-blue-500/20 rounded-xl"
                   />
                 </div>
               </div>
               <Button 
-                className="w-full h-12 text-base font-medium" 
+                className="w-full h-12 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-all flex items-center gap-2 group shadow-lg shadow-blue-600/20" 
                 onClick={() => handleAuth('login')} 
                 disabled={isLoading}
               >
-                {isLoading ? (
+                {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : (
                   <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Signing in...
+                    Sign In
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </>
-                ) : 'Sign In'}
+                )}
               </Button>
             </TabsContent>
 
-            <TabsContent value="register" className="space-y-6 mt-4">
+            <TabsContent value="register" className="space-y-6 mt-8">
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="register-email">Email</Label>
+                  <Label htmlFor="register-email" className="text-gray-400">Email Address</Label>
                   <Input 
                     id="register-email" 
                     type="email" 
-                    placeholder="m@example.com" 
+                    placeholder="name@rnsit.ac.in" 
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-12"
+                    className="h-12 bg-white/5 border-white/10 rounded-xl"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="register-password">Password</Label>
+                  <Label htmlFor="register-password" name="password" className="text-gray-400">Create Password</Label>
                   <Input 
                     id="register-password" 
                     type="password" 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-12"
+                    className="h-12 bg-white/5 border-white/10 rounded-xl"
                   />
                 </div>
               </div>
               <Button 
-                className="w-full h-12 text-base font-medium" 
+                className="w-full h-12 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition-all shadow-lg shadow-emerald-600/20" 
                 onClick={() => handleAuth('register')} 
                 disabled={isLoading}
               >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Creating account...
-                  </>
-                ) : 'Create Account'}
+                {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Create Account'}
               </Button>
             </TabsContent>
           </Tabs>
@@ -160,3 +182,4 @@ const Auth = () => {
 };
 
 export default Auth;
+
